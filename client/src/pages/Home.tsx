@@ -104,12 +104,12 @@ const products: GameProduct[] = [
 ];
 
 const reviews: Review[] = [
-  { id: "1", name: "Ahmed", rating: 5 },
-  { id: "2", name: "Mohammed", rating: 5 },
-  { id: "3", name: "Sarah", rating: 5 },
-  { id: "4", name: "Fatima", rating: 5 },
-  { id: "5", name: "Ali", rating: 5 },
-  { id: "6", name: "Omar", rating: 5 },
+  { id: "1", name: "Ahmed", rating: 5, purchaseAmount: "1,000 Diamonds", gameDate: "Jan 2025" },
+  { id: "2", name: "Mohammed", rating: 5, purchaseAmount: "500 UC", gameDate: "Feb 2025" },
+  { id: "3", name: "Sarah", rating: 5, purchaseAmount: "2,000 VP", gameDate: "Mar 2025" },
+  { id: "4", name: "Fatima", rating: 5, purchaseAmount: "10,000 ZP", gameDate: "Apr 2025" },
+  { id: "5", name: "Ali", rating: 5, purchaseAmount: "5,000 V-Bucks", gameDate: "May 2025" },
+  { id: "6", name: "Omar", rating: 5, purchaseAmount: "1,000 RP", gameDate: "Jun 2025" },
 ];
 
 export default function Home() {

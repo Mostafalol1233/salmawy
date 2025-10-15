@@ -18,6 +18,8 @@ export interface Review {
   id: string;
   name: string;
   rating: number;
+  purchaseAmount: string;
+  gameDate: string;
 }
 
 export const gameProductSchema = z.object({
@@ -36,6 +38,8 @@ export const reviewSchema = z.object({
   id: z.string(),
   name: z.string(),
   rating: z.number().min(1).max(5),
+  purchaseAmount: z.string(),
+  gameDate: z.string(),
 });
 
 export type SelectGameProduct = GameProduct;

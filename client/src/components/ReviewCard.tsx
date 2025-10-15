@@ -17,7 +17,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
       <h4 className="font-semibold text-foreground mb-2" data-testid={`text-reviewer-${review.id}`}>
         {review.name}
       </h4>
-      <div className="flex justify-center gap-1">
+      <div className="flex justify-center gap-1 mb-3">
         {Array.from({ length: 5 }).map((_, index) => (
           <Star
             key={index}
@@ -29,6 +29,14 @@ export function ReviewCard({ review }: ReviewCardProps) {
             data-testid={`star-${review.id}-${index + 1}`}
           />
         ))}
+      </div>
+      <div className="space-y-1">
+        <p className="text-sm text-muted-foreground" data-testid={`text-purchase-${review.id}`}>
+          {review.purchaseAmount}
+        </p>
+        <p className="text-xs text-muted-foreground" data-testid={`text-date-${review.id}`}>
+          {review.gameDate}
+        </p>
       </div>
     </Card>
   );

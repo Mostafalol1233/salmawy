@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Globe, Flame } from "lucide-react";
-import heroImage from "@assets/generated_images/Hero_section_anime_characters_a928f401.png";
+import { Globe } from "lucide-react";
+import heroImage from "@assets/IMG-20251015-WA0395_1760557850015.jpg";
 
 interface HeroSectionProps {
   onShopClick: () => void;
@@ -10,47 +10,55 @@ interface HeroSectionProps {
 
 export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSectionProps) {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-black dark:bg-black">
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-transparent z-10" />
         <img 
           src={heroImage} 
           alt="Gaming Characters" 
-          className="w-full h-full object-cover opacity-40"
+          className="absolute right-0 top-0 h-full w-auto md:w-1/2 object-cover object-left"
         />
-        <div className="absolute inset-0 hero-glow" />
       </div>
 
-      <Button
-        variant="outline"
-        size="default"
-        onClick={onLanguageToggle}
-        className="absolute top-6 right-6 z-20 gap-2"
-        data-testid="button-language-toggle"
-      >
-        <Globe className="w-4 h-4" />
-        <span>{isArabic ? "English" : "العربية"}</span>
-      </Button>
-
-      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-        <div className="flex items-center justify-center gap-3 mb-6">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground">
-            {isArabic ? "متجر سلاموي" : "Welcome to Slamawy Store"}
-          </h1>
-          <Flame className="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 text-primary" />
+      <div className="absolute top-0 left-0 right-0 z-20 p-4 md:p-6 flex items-center justify-between">
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary flex items-center justify-center">
+            <span className="text-white font-bold text-lg md:text-xl">S</span>
+          </div>
+          <h2 className="text-white font-bold text-sm md:text-lg lg:text-xl">SLAMAWY STORE</h2>
         </div>
-        <p className="text-xl md:text-2xl text-muted-foreground mb-8 font-medium">
-          {isArabic ? "موثوق وتسليم سريع" : "Trusted & Fast Delivery"}
-        </p>
+        
         <Button
-          size="lg"
-          variant="default"
-          onClick={onShopClick}
-          className="text-lg px-8 py-6 min-h-14"
-          data-testid="button-shop-now"
+          variant="outline"
+          size="default"
+          onClick={onLanguageToggle}
+          className="gap-2 bg-white/10 text-white border-white/20 backdrop-blur-sm hover:bg-white/20"
+          data-testid="button-language-toggle"
         >
-          {isArabic ? "تسوق الآن" : "Shop Now"}
+          <Globe className="w-4 h-4" />
+          <span className="hidden sm:inline">{isArabic ? "Translate to English" : "Translate to Arabic"}</span>
+          <span className="sm:hidden">{isArabic ? "EN" : "AR"}</span>
         </Button>
+      </div>
+
+      <div className="relative z-10 px-4 md:px-12 lg:px-20 max-w-7xl mx-auto w-full">
+        <div className="max-w-2xl">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white mb-4 md:mb-6">
+            {isArabic ? "مرحباً بك في متجر سلاموي 🔥" : "Welcome to Slamawy Store 🔥"}
+          </h1>
+          <p className="text-lg md:text-xl lg:text-2xl text-white/90 mb-6 md:mb-8 font-medium">
+            {isArabic ? "موثوق وتسليم سريع" : "Trusted & Fast Delivery"}
+          </p>
+          <Button
+            size="lg"
+            variant="default"
+            onClick={onShopClick}
+            className="text-base md:text-lg px-6 md:px-8 py-5 md:py-6 min-h-12 md:min-h-14"
+            data-testid="button-shop-now"
+          >
+            {isArabic ? "تسوق الآن" : "Shop Now"}
+          </Button>
+        </div>
       </div>
     </section>
   );

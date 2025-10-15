@@ -16,8 +16,8 @@ export function ProductCard({ product, isArabic, whatsappNumber = "201234567890"
 
   const handleWhatsAppClick = () => {
     const message = isArabic
-      ? `مرحباً، أريد شراء ${product.name} - ${selectedAmount.label}`
-      : `Hi, I want to buy ${product.name} - ${selectedAmount.label}`;
+      ? `مرحباً سلاموي، أريد شراء هذه البطاقة ${product.name} بمبلغ ${selectedAmount.label}. هل يمكنك إخباري عن السعر؟`
+      : `Hello Salamawy, I need to buy this card ${product.name} amount ${selectedAmount.label}. Can you tell me about the price?`;
     
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
