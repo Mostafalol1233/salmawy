@@ -13,7 +13,7 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-black">
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30 hidden md:block"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
         style={{ backgroundImage: `url(${galaxyBg})` }}
       />
       
@@ -26,7 +26,7 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
           playsInline
           aria-hidden="true"
           tabIndex={-1}
-          className="h-full w-auto object-contain max-w-[60%] md:max-w-[50%]"
+          className="h-full w-auto object-contain max-w-[80%] md:max-w-[70%]"
         />
       </div>
 
