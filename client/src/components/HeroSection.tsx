@@ -33,11 +33,18 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
 
       <div className="absolute top-0 left-0 right-0 z-20 p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+          <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-white/10 backdrop-blur-sm">
             <img 
               src="/attached_assets/image_1760567246752.png" 
               alt="Slamawy Logo" 
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain p-1"
+              onError={(e) => {
+                // Fallback to the letter S if image fails to load
+                e.currentTarget.style.display = 'none';
+                if (e.currentTarget.parentElement) {
+                  e.currentTarget.parentElement.innerHTML = '<span class="text-white font-bold text-2xl drop-shadow-md flex items-center justify-center w-full h-full">S</span>';
+                }
+              }}
             />
           </div>
           <h2 className="text-white font-bold text-lg">SLAMAWY STORE</h2>
