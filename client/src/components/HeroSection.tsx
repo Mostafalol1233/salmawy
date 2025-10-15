@@ -17,14 +17,33 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
   useEffect(() => {
     const setupReversePlayback = (video: HTMLVideoElement) => {
       let playingForward = true;
+      let animationFrameId: number | null = null;
+      let lastTime = Date.now();
+
+      const reversePlayback = () => {
+        const now = Date.now();
+        const deltaTime = (now - lastTime) / 1000;
+        lastTime = now;
+
+        if (!playingForward) {
+          video.currentTime = Math.max(0, video.currentTime - deltaTime);
+          
+          if (video.currentTime <= 0.1) {
+            playingForward = true;
+            animationFrameId = null;
+            video.play();
+          } else {
+            animationFrameId = requestAnimationFrame(reversePlayback);
+          }
+        }
+      };
 
       const handleTimeUpdate = () => {
         if (playingForward && video.currentTime >= video.duration - 0.1) {
           playingForward = false;
-          video.playbackRate = -1;
-        } else if (!playingForward && video.currentTime <= 0.1) {
-          playingForward = true;
-          video.playbackRate = 1;
+          video.pause();
+          lastTime = Date.now();
+          animationFrameId = requestAnimationFrame(reversePlayback);
         }
       };
 
@@ -32,6 +51,10 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
       
       return () => {
         video.removeEventListener('timeupdate', handleTimeUpdate);
+        if (animationFrameId !== null) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
       };
     };
 
@@ -56,7 +79,6 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
           ref={desktopVideoRef}
           src={heroVideo}
           autoPlay
-          loop
           muted
           playsInline
           aria-hidden="true"
@@ -109,7 +131,6 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
             ref={mobileVideoRef}
             src={heroVideo}
             autoPlay
-            loop
             muted
             playsInline
             aria-hidden="true"
