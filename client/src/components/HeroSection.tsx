@@ -31,7 +31,7 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
           if (video.currentTime <= 0.1) {
             playingForward = true;
             animationFrameId = null;
-            video.play();
+            video.play().catch(() => {});
           } else {
             animationFrameId = requestAnimationFrame(reversePlayback);
           }
@@ -39,7 +39,17 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
       };
 
       const handleTimeUpdate = () => {
-        if (playingForward && video.currentTime >= video.duration - 0.1) {
+        if (playingForward && video.currentTime >= video.duration - 0.15) {
+          playingForward = false;
+          video.pause();
+          lastTime = Date.now();
+          animationFrameId = requestAnimationFrame(reversePlayback);
+        }
+      };
+
+      const handleEnded = (e: Event) => {
+        e.preventDefault();
+        if (playingForward) {
           playingForward = false;
           video.pause();
           lastTime = Date.now();
@@ -48,9 +58,11 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
       };
 
       video.addEventListener('timeupdate', handleTimeUpdate);
+      video.addEventListener('ended', handleEnded);
       
       return () => {
         video.removeEventListener('timeupdate', handleTimeUpdate);
+        video.removeEventListener('ended', handleEnded);
         if (animationFrameId !== null) {
           cancelAnimationFrame(animationFrameId);
           animationFrameId = null;
