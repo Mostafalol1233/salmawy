@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Globe } from "lucide-react";
-import { useEffect, useRef } from "react";
-import heroVideo from "@assets/34560257-1b3a-407c-82b8-cf95bb8349e1_1760562412486.mp4";
+import { Globe, Flame } from "lucide-react";
+import heroVideo from "@assets/clideo_editor_8a556c51557b41029d2f8dc30a022ca9 (online-video-cutter.com)_1760565168452.mp4";
 import galaxyBg from "@assets/generated_images/Galaxy_stars_space_background_7ba46401.png";
 
 interface HeroSectionProps {
@@ -11,73 +10,6 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSectionProps) {
-  const desktopVideoRef = useRef<HTMLVideoElement>(null);
-  const mobileVideoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const setupReversePlayback = (video: HTMLVideoElement) => {
-      let playingForward = true;
-      let animationFrameId: number | null = null;
-      let lastTime = Date.now();
-
-      const reversePlayback = () => {
-        const now = Date.now();
-        const deltaTime = (now - lastTime) / 1000;
-        lastTime = now;
-
-        if (!playingForward) {
-          video.currentTime = Math.max(0, video.currentTime - deltaTime);
-          
-          if (video.currentTime <= 0.1) {
-            playingForward = true;
-            animationFrameId = null;
-            video.play().catch(() => {});
-          } else {
-            animationFrameId = requestAnimationFrame(reversePlayback);
-          }
-        }
-      };
-
-      const handleTimeUpdate = () => {
-        if (playingForward && video.currentTime >= video.duration - 0.15) {
-          playingForward = false;
-          video.pause();
-          lastTime = Date.now();
-          animationFrameId = requestAnimationFrame(reversePlayback);
-        }
-      };
-
-      const handleEnded = (e: Event) => {
-        e.preventDefault();
-        if (playingForward) {
-          playingForward = false;
-          video.pause();
-          lastTime = Date.now();
-          animationFrameId = requestAnimationFrame(reversePlayback);
-        }
-      };
-
-      video.addEventListener('timeupdate', handleTimeUpdate);
-      video.addEventListener('ended', handleEnded);
-      
-      return () => {
-        video.removeEventListener('timeupdate', handleTimeUpdate);
-        video.removeEventListener('ended', handleEnded);
-        if (animationFrameId !== null) {
-          cancelAnimationFrame(animationFrameId);
-          animationFrameId = null;
-        }
-      };
-    };
-
-    const desktopCleanup = desktopVideoRef.current ? setupReversePlayback(desktopVideoRef.current) : undefined;
-    const mobileCleanup = mobileVideoRef.current ? setupReversePlayback(mobileVideoRef.current) : undefined;
-
-    return () => {
-      desktopCleanup?.();
-      mobileCleanup?.();
-    };
-  }, []);
 
   return (
     <section className="relative min-h-screen flex flex-col bg-black">
@@ -88,9 +20,9 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
       
       <div className="hidden md:flex absolute inset-0 z-0 items-center justify-end">
         <video 
-          ref={desktopVideoRef}
           src={heroVideo}
           autoPlay
+          loop
           muted
           playsInline
           aria-hidden="true"
@@ -101,8 +33,9 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
 
       <div className="absolute top-0 left-0 right-0 z-20 p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center border border-border">
-            <span className="text-primary font-bold text-xl">S</span>
+          <div className="relative w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-lg shadow-primary/30">
+            <span className="text-white font-bold text-2xl drop-shadow-md">S</span>
+            <div className="absolute inset-0 rounded-lg bg-gradient-to-tr from-transparent via-white/20 to-transparent"></div>
           </div>
           <h2 className="text-white font-bold text-lg">SLAMAWY STORE</h2>
         </div>
@@ -121,9 +54,12 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
 
       <div className="relative z-10 px-6 md:px-12 lg:px-16 max-w-7xl w-full flex-1 flex flex-col justify-center md:justify-center">
         <div className="max-w-xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-            {isArabic ? "مرحباً بك في" : "Welcome to"}<br />
-            {isArabic ? "متجر سلاموي 🔥" : "Slamawy Store 🔥"}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight flex flex-col">
+            <span>{isArabic ? "مرحباً بك في" : "Welcome to"}</span>
+            <span className="flex items-center gap-3">
+              {isArabic ? "متجر سلاموي" : "Slamawy Store"}
+              <Flame className="w-10 h-10 md:w-12 md:h-12 text-blue-500 fill-blue-400" />
+            </span>
           </h1>
           <p className="text-xl md:text-2xl text-white mb-8 font-normal">
             {isArabic ? "موثوق وتسليم سريع" : "Trusted & Fast Delivery"}
@@ -140,9 +76,9 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
 
         <div className="md:hidden mt-12 flex justify-center">
           <video 
-            ref={mobileVideoRef}
             src={heroVideo}
             autoPlay
+            loop
             muted
             playsInline
             aria-hidden="true"
