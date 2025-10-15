@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Globe } from "lucide-react";
-import heroImage from "@assets/IMG-20251015-WA0395_1760557850015.jpg";
+import heroImage from "@assets/generated_images/Anime_character_with_blue_glow_8149ad3f.png";
 
 interface HeroSectionProps {
   onShopClick: () => void;
@@ -10,50 +10,48 @@ interface HeroSectionProps {
 
 export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSectionProps) {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-black dark:bg-black">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-transparent z-10" />
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-black">
+      <div className="absolute inset-0 z-0 flex items-center justify-end">
         <img 
           src={heroImage} 
-          alt="Gaming Characters" 
-          className="absolute right-0 top-0 h-full w-auto md:w-1/2 object-cover object-left"
+          alt="Gaming Character" 
+          className="h-full w-auto object-contain max-w-[60%] md:max-w-[50%]"
         />
       </div>
 
-      <div className="absolute top-0 left-0 right-0 z-20 p-4 md:p-6 flex items-center justify-between">
-        <div className="flex items-center gap-2 md:gap-3">
-          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary flex items-center justify-center">
-            <span className="text-white font-bold text-lg md:text-xl">S</span>
+      <div className="absolute top-0 left-0 right-0 z-20 p-6 md:p-8 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+            <span className="text-white font-bold text-xl">S</span>
           </div>
-          <h2 className="text-white font-bold text-sm md:text-lg lg:text-xl">SLAMAWY STORE</h2>
+          <h2 className="text-white font-bold text-base md:text-lg">SLAMAWY STORE</h2>
         </div>
         
         <Button
-          variant="outline"
+          variant="ghost"
           size="default"
           onClick={onLanguageToggle}
-          className="gap-2 bg-white/10 text-white border-white/20 backdrop-blur-sm hover:bg-white/20"
+          className="gap-2 text-white"
           data-testid="button-language-toggle"
         >
-          <Globe className="w-4 h-4" />
-          <span className="hidden sm:inline">{isArabic ? "Translate to English" : "Translate to Arabic"}</span>
-          <span className="sm:hidden">{isArabic ? "EN" : "AR"}</span>
+          <Globe className="w-5 h-5" />
+          <span>{isArabic ? "Translate to English" : "Translate to Arabic"}</span>
         </Button>
       </div>
 
-      <div className="relative z-10 px-4 md:px-12 lg:px-20 max-w-7xl mx-auto w-full">
-        <div className="max-w-2xl">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white mb-4 md:mb-6">
-            {isArabic ? "مرحباً بك في متجر سلاموي 🔥" : "Welcome to Slamawy Store 🔥"}
+      <div className="relative z-10 px-6 md:px-12 lg:px-16 max-w-7xl w-full">
+        <div className="max-w-xl">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            {isArabic ? "مرحباً بك في" : "Welcome to"}<br />
+            {isArabic ? "متجر سلاموي 🔥" : "Slamawy Store 🔥"}
           </h1>
-          <p className="text-lg md:text-xl lg:text-2xl text-white/90 mb-6 md:mb-8 font-medium">
+          <p className="text-xl md:text-2xl text-white mb-8 font-normal">
             {isArabic ? "موثوق وتسليم سريع" : "Trusted & Fast Delivery"}
           </p>
           <Button
             size="lg"
             variant="default"
             onClick={onShopClick}
-            className="text-base md:text-lg px-6 md:px-8 py-5 md:py-6 min-h-12 md:min-h-14"
             data-testid="button-shop-now"
           >
             {isArabic ? "تسوق الآن" : "Shop Now"}
