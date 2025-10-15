@@ -58,7 +58,7 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
             <span>{isArabic ? "مرحباً بك في" : "Welcome to"}</span>
             <span className="flex items-center gap-3">
               {isArabic ? "متجر سلاموي" : "Slamawy Store"}
-              <BadgeCheck className="w-10 h-10 md:w-12 md:h-12 text-blue-500 fill-blue-400" />
+              <BadgeCheck className="w-10 h-10 md:w-12 md:h-12 text-white fill-blue-500" />
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-white mb-8 font-normal">
