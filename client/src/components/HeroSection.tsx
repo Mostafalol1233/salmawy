@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Globe } from "lucide-react";
 import heroVideo from "@assets/443c3e54-d41c-495e-bd64-ed9045a7ed52_1760560596067.mp4";
+import galaxyBg from "@assets/generated_images/Galaxy_stars_space_background_7ba46401.png";
 
 interface HeroSectionProps {
   onShopClick: () => void;
@@ -11,6 +12,11 @@ interface HeroSectionProps {
 export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSectionProps) {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-black">
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
+        style={{ backgroundImage: `url(${galaxyBg})` }}
+      />
+      
       <div className="absolute inset-0 z-0 flex items-center justify-end">
         <video 
           src={heroVideo}
