@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Globe } from "lucide-react";
-import heroVideo from "@assets/443c3e54-d41c-495e-bd64-ed9045a7ed52_1760560596067.mp4";
+import { useEffect, useRef } from "react";
+import heroVideo from "@assets/34560257-1b3a-407c-82b8-cf95bb8349e1_1760562412486.mp4";
 import galaxyBg from "@assets/generated_images/Galaxy_stars_space_background_7ba46401.png";
 
 interface HeroSectionProps {
@@ -10,15 +11,49 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSectionProps) {
+  const desktopVideoRef = useRef<HTMLVideoElement>(null);
+  const mobileVideoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const setupReversePlayback = (video: HTMLVideoElement) => {
+      let playingForward = true;
+
+      const handleTimeUpdate = () => {
+        if (playingForward && video.currentTime >= video.duration - 0.1) {
+          playingForward = false;
+          video.playbackRate = -1;
+        } else if (!playingForward && video.currentTime <= 0.1) {
+          playingForward = true;
+          video.playbackRate = 1;
+        }
+      };
+
+      video.addEventListener('timeupdate', handleTimeUpdate);
+      
+      return () => {
+        video.removeEventListener('timeupdate', handleTimeUpdate);
+      };
+    };
+
+    const desktopCleanup = desktopVideoRef.current ? setupReversePlayback(desktopVideoRef.current) : undefined;
+    const mobileCleanup = mobileVideoRef.current ? setupReversePlayback(mobileVideoRef.current) : undefined;
+
+    return () => {
+      desktopCleanup?.();
+      mobileCleanup?.();
+    };
+  }, []);
+
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-black">
+    <section className="relative min-h-screen flex flex-col bg-black">
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
         style={{ backgroundImage: `url(${galaxyBg})` }}
       />
       
-      <div className="absolute inset-0 z-0 flex items-center justify-end">
+      <div className="hidden md:flex absolute inset-0 z-0 items-center justify-end">
         <video 
+          ref={desktopVideoRef}
           src={heroVideo}
           autoPlay
           loop
@@ -26,7 +61,7 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
           playsInline
           aria-hidden="true"
           tabIndex={-1}
-          className="h-full w-auto object-contain max-w-[80%] md:max-w-[70%]"
+          className="h-full w-auto object-contain max-w-[50%]"
         />
       </div>
 
@@ -50,7 +85,7 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
         </Button>
       </div>
 
-      <div className="relative z-10 px-6 md:px-12 lg:px-16 max-w-7xl w-full">
+      <div className="relative z-10 px-6 md:px-12 lg:px-16 max-w-7xl w-full flex-1 flex flex-col justify-center md:justify-center">
         <div className="max-w-xl">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
             {isArabic ? "مرحباً بك في" : "Welcome to"}<br />
@@ -67,6 +102,20 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
           >
             {isArabic ? "تسوق الآن" : "Shop Now"}
           </Button>
+        </div>
+
+        <div className="md:hidden mt-12 flex justify-center">
+          <video 
+            ref={mobileVideoRef}
+            src={heroVideo}
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-hidden="true"
+            tabIndex={-1}
+            className="w-full max-w-md object-contain"
+          />
         </div>
       </div>
     </section>
