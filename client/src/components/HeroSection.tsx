@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Globe } from "lucide-react";
-import heroImage from "@assets/generated_images/Anime_character_with_blue_glow_8149ad3f.png";
+import heroImage from "@assets/generated_images/Three_anime_characters_blue_glow_84f72cdd.png";
 
 interface HeroSectionProps {
   onShopClick: () => void;
@@ -14,27 +14,27 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
       <div className="absolute inset-0 z-0 flex items-center justify-end">
         <img 
           src={heroImage} 
-          alt="Gaming Character" 
+          alt="Gaming Characters" 
           className="h-full w-auto object-contain max-w-[60%] md:max-w-[50%]"
         />
       </div>
 
-      <div className="absolute top-0 left-0 right-0 z-20 p-6 md:p-8 flex items-center justify-between">
+      <div className="absolute top-0 left-0 right-0 z-20 p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-            <span className="text-white font-bold text-xl">S</span>
+          <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center border border-border">
+            <span className="text-primary font-bold text-xl">S</span>
           </div>
-          <h2 className="text-white font-bold text-base md:text-lg">SLAMAWY STORE</h2>
+          <h2 className="text-white font-bold text-lg">SLAMAWY STORE</h2>
         </div>
         
         <Button
           variant="ghost"
-          size="default"
+          size="sm"
           onClick={onLanguageToggle}
-          className="gap-2 text-white"
+          className="gap-2 text-white text-sm"
           data-testid="button-language-toggle"
         >
-          <Globe className="w-5 h-5" />
+          <Globe className="w-4 h-4" />
           <span>{isArabic ? "Translate to English" : "Translate to Arabic"}</span>
         </Button>
       </div>
