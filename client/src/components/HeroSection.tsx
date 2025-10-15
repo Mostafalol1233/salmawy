@@ -33,9 +33,12 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
 
       <div className="absolute top-0 left-0 right-0 z-20 p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="relative w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-lg shadow-primary/30">
-            <span className="text-white font-bold text-2xl drop-shadow-md">S</span>
-            <div className="absolute inset-0 rounded-lg bg-gradient-to-tr from-transparent via-white/20 to-transparent"></div>
+          <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+            <img 
+              src="/attached_assets/image_1760567246752.png" 
+              alt="Slamawy Logo" 
+              className="w-full h-full object-contain"
+            />
           </div>
           <h2 className="text-white font-bold text-lg">SLAMAWY STORE</h2>
         </div>
