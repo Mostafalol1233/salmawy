@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Globe } from "lucide-react";
-import heroImage from "@assets/generated_images/Three_anime_characters_blue_glow_84f72cdd.png";
+import { AnimeCharacters } from "./AnimeCharacters";
 
 interface HeroSectionProps {
   onShopClick: () => void;
@@ -11,12 +11,10 @@ interface HeroSectionProps {
 export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSectionProps) {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-black">
-      <div className="absolute inset-0 z-0 flex items-center justify-end">
-        <img 
-          src={heroImage} 
-          alt="Gaming Characters" 
-          className="h-full w-auto object-contain max-w-[60%] md:max-w-[50%]"
-        />
+      <div className="absolute inset-0 z-0 flex items-center justify-end pr-8">
+        <div className="h-full w-auto max-w-[70%] md:max-w-[60%]">
+          <AnimeCharacters />
+        </div>
       </div>
 
       <div className="absolute top-0 left-0 right-0 z-20 p-6 flex items-center justify-between">
