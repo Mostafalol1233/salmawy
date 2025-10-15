@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Globe, BadgeCheck } from "lucide-react";
+import { Globe } from "lucide-react";
 import heroVideo from "@assets/clideo_editor_8a556c51557b41029d2f8dc30a022ca9 (online-video-cutter.com)_1760565168452.mp4";
 import galaxyBg from "@assets/generated_images/Galaxy_stars_space_background_7ba46401.png";
 
@@ -58,7 +58,10 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
             <span>{isArabic ? "مرحباً بك في" : "Welcome to"}</span>
             <span className="flex items-center gap-3">
               {isArabic ? "متجر سلاموي" : "Slamawy Store"}
-              <BadgeCheck className="w-10 h-10 md:w-12 md:h-12 text-white fill-blue-500" />
+              <svg className="w-10 h-10 md:w-12 md:h-12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" fill="#1877F2"/>
+                <path d="M10.5 15L7.5 12L8.91 10.59L10.5 12.17L15.09 7.58L16.5 9L10.5 15Z" fill="white"/>
+              </svg>
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-white mb-8 font-normal">
