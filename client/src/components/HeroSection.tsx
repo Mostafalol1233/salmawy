@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Globe, Flame } from "lucide-react";
+import { Globe, BadgeCheck } from "lucide-react";
 import heroVideo from "@assets/clideo_editor_8a556c51557b41029d2f8dc30a022ca9 (online-video-cutter.com)_1760565168452.mp4";
 import galaxyBg from "@assets/generated_images/Galaxy_stars_space_background_7ba46401.png";
 
@@ -17,7 +17,7 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
         style={{ backgroundImage: `url(${galaxyBg})` }}
       />
-      
+
       <div className="hidden md:flex absolute inset-0 z-0 items-center justify-end">
         <video 
           src={heroVideo}
@@ -39,7 +39,7 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
           </div>
           <h2 className="text-white font-bold text-lg">SLAMAWY STORE</h2>
         </div>
-        
+
         <Button
           variant="ghost"
           size="sm"
@@ -58,7 +58,7 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
             <span>{isArabic ? "مرحباً بك في" : "Welcome to"}</span>
             <span className="flex items-center gap-3">
               {isArabic ? "متجر سلاموي" : "Slamawy Store"}
-              <Flame className="w-10 h-10 md:w-12 md:h-12 text-blue-500 fill-blue-400" />
+              <BadgeCheck className="w-10 h-10 md:w-12 md:h-12 text-blue-500 fill-blue-400" />
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-white mb-8 font-normal">
