@@ -17,7 +17,7 @@ export function AboutSection({ isArabic, whatsappNumber = "201234567890" }: Abou
             {/* SLAMAWY Logo */}
             <div className="flex justify-center mb-6">
               <img 
-                src="/logodown .png" 
+                src="/logodown.png" 
                 alt="Slamawy Logo" 
                 className="max-w-md w-full h-auto object-contain"
               />

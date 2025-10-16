@@ -17,7 +17,7 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
         style={{ 
-          backgroundImage: `url('/attached_assets/generated_images/Galaxy_stars_space_background_7ba46401.png')`,
+          backgroundImage: `url('/galaxy-bg.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
@@ -43,7 +43,7 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
       <div className="absolute top-0 left-0 right-0 z-20 p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <img 
-            src="/attached_assets/generated_images/Anime_character_with_blue_glow_8149ad3f.png" 
+            src="/logo.png" 
             alt="Slamawy Logo" 
             className="w-20 h-20 object-contain"
           />
