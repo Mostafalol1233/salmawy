@@ -14,6 +14,15 @@ export function AboutSection({ isArabic, whatsappNumber = "201234567890" }: Abou
       <div className="max-w-7xl mx-auto">
         <Card className="p-8 md:p-12">
           <div className="text-center mb-8">
+            {/* SLAMAWY Logo */}
+            <div className="flex justify-center mb-6">
+              <img 
+                src="/logodown .png" 
+                alt="Slamawy Logo" 
+                className="max-w-md w-full h-auto object-contain"
+              />
+            </div>
+            
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
               {isArabic ? "حول سلاموي" : "About Slamawy Store"}
             </h2>

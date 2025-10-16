@@ -13,10 +13,19 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
 
   return (
     <section className="relative min-h-screen flex flex-col bg-black">
+      {/* Galaxy Background */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
-        style={{ backgroundImage: `url(${galaxyBg})` }}
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
+        style={{ 
+          backgroundImage: `url('/attached_assets/generated_images/Galaxy_stars_space_background_7ba46401.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
       />
+      
+      {/* Additional overlay for better visibility */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-black/40" />
 
       <div className="hidden md:flex absolute inset-0 z-0 items-center justify-end">
         <video 
@@ -33,13 +42,11 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
 
       <div className="absolute top-0 left-0 right-0 z-20 p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-cyan-500/20 backdrop-blur-sm flex items-center justify-center">
-            <img 
-              src="/attached_assets/image_1760567246752.png" 
-              alt="Slamawy Logo" 
-              className="w-10 h-10 object-contain"
-            />
-          </div>
+          <img 
+            src="/attached_assets/generated_images/Anime_character_with_blue_glow_8149ad3f.png" 
+            alt="Slamawy Logo" 
+            className="w-20 h-20 object-contain"
+          />
           <h2 className="text-white font-bold text-lg">SLAMAWY STORE</h2>
         </div>
 
