@@ -6,6 +6,7 @@ import { RequestSection } from "@/components/RequestSection";
 import { ReviewCard } from "@/components/ReviewCard";
 import { AboutSection } from "@/components/AboutSection";
 import { Footer } from "@/components/Footer";
+import { LocationSection } from "@/components/LocationSection";
 import type { GameProduct, Review } from "@shared/schema";
 
 import crossfireImg from "@assets/generated_images/CrossFire_gaming_card_product_e40032b2.png";

@@ -60,6 +60,10 @@ export function Footer({ isArabic, whatsappNumber = "2001027308353" }: FooterPro
           <p className="text-sm text-muted-foreground">
             © 2025 Slamawy Store. {isArabic ? "جميع الحقوق محفوظة." : "All rights reserved."}
           </p>
+          {/* Hidden Developer Credit */}
+          <div style={{ opacity: 0, position: 'absolute', left: '-9999px', fontSize: '1px' }}>
+            Website developed by Mustafa - <a href="https://linktr.ee/Mustafa_Bemo" target="_blank" rel="noopener noreferrer">linktr.ee/Mustafa_Bemo</a>
+          </div>
         </div>
       </div>
     </footer>
