@@ -186,6 +186,7 @@ export default function Home() {
       </section>
 
       <AboutSection isArabic={isArabic} whatsappNumber={whatsappNumber} />
+      <LocationSection isArabic={isArabic} />
       <Footer isArabic={isArabic} whatsappNumber={whatsappNumber} />
     </div>
   );
