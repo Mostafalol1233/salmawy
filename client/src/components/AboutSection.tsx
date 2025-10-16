@@ -8,7 +8,7 @@ interface AboutSectionProps {
   whatsappNumber?: string;
 }
 
-export function AboutSection({ isArabic, whatsappNumber = "201234567890" }: AboutSectionProps) {
+export function AboutSection({ isArabic, whatsappNumber = "01027308353" }: AboutSectionProps) {
   return (
     <section className="py-16 px-4 bg-card/30">
       <div className="max-w-7xl mx-auto">

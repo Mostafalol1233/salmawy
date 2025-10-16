@@ -7,7 +7,7 @@ interface RequestSectionProps {
   whatsappNumber?: string;
 }
 
-export function RequestSection({ isArabic, whatsappNumber = "201234567890" }: RequestSectionProps) {
+export function RequestSection({ isArabic, whatsappNumber = "01027308353" }: RequestSectionProps) {
   const handleWhatsAppClick = () => {
     const message = isArabic
       ? "مرحباً، هل Discord Nitro أو بطاقة أخرى متوفرة الآن؟"

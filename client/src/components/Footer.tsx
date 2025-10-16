@@ -6,7 +6,7 @@ interface FooterProps {
   whatsappNumber?: string;
 }
 
-export function Footer({ isArabic, whatsappNumber = "201234567890" }: FooterProps) {
+export function Footer({ isArabic, whatsappNumber = "01027308353" }: FooterProps) {
   return (
     <footer className="bg-card border-t border-card-border py-8 px-4">
       <div className="max-w-7xl mx-auto">
