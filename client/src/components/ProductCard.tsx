@@ -11,7 +11,7 @@ interface ProductCardProps {
   whatsappNumber?: string;
 }
 
-export function ProductCard({ product, isArabic, whatsappNumber = "01027308353" }: ProductCardProps) {
+export function ProductCard({ product, isArabic, whatsappNumber = "2001027308353" }: ProductCardProps) {
   const [selectedAmount, setSelectedAmount] = useState(product.amounts[0]);
 
   const handleWhatsAppClick = () => {

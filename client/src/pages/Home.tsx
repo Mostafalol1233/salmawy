@@ -115,7 +115,7 @@ const reviews: Review[] = [
 export default function Home() {
   const [isArabic, setIsArabic] = useState(false);
   const productsRef = useRef<HTMLElement>(null);
-  const whatsappNumber = "01027308353";
+  const whatsappNumber = "2001027308353";
 
   const { data: productsData, isLoading: productsLoading } = useQuery<GameProduct[]>({
     queryKey: ["/api/products"],
