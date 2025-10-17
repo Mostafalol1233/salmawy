@@ -16,8 +16,8 @@ import valorantImg from "@assets/generated_images/Valorant_gaming_card_product_4
 import genshinImg from "@assets/generated_images/Genshin_Impact_gaming_card_c2a046c1.png";
 import lolImg from "@assets/generated_images/League_of_Legends_gaming_card_a7805b82.png";
 import fortniteImg from "@assets/generated_images/Fortnite_gaming_card_product_e08a005e.png";
-import robloxImg from "@assets/generated_images/Hero_section_anime_characters_a928f401.png";
-import codImg from "@assets/generated_images/Galaxy_stars_space_background_7ba46401.png";
+import robloxImg from "@assets/generated_images/Roblox_gaming_card.png";
+import codImg from "@assets/generated_images/Call_of_Duty_gaming_card.png";
 
 const products: GameProduct[] = [
   {
