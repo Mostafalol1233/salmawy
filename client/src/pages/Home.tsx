@@ -16,6 +16,8 @@ import valorantImg from "@assets/generated_images/Valorant_gaming_card_product_4
 import genshinImg from "@assets/generated_images/Genshin_Impact_gaming_card_c2a046c1.png";
 import lolImg from "@assets/generated_images/League_of_Legends_gaming_card_a7805b82.png";
 import fortniteImg from "@assets/generated_images/Fortnite_gaming_card_product_e08a005e.png";
+import robloxImg from "@assets/generated_images/Roblox_gaming_card.png";
+import codImg from "@assets/generated_images/Call_of_Duty_gaming_card.png";
 
 const products: GameProduct[] = [
   {
@@ -100,6 +102,30 @@ const products: GameProduct[] = [
       { value: 2800, label: "2,800 V-Bucks" },
       { value: 5000, label: "5,000 V-Bucks" },
       { value: 13500, label: "13,500 V-Bucks" },
+    ],
+  },
+  {
+    id: "roblox",
+    name: "Roblox",
+    currency: "Robux",
+    image: robloxImg,
+    amounts: [
+      { value: 400, label: "400 Robux" },
+      { value: 800, label: "800 Robux" },
+      { value: 1700, label: "1,700 Robux" },
+      { value: 4500, label: "4,500 Robux" },
+    ],
+  },
+  {
+    id: "callofduty",
+    name: "Call of Duty",
+    currency: "CP",
+    image: codImg,
+    amounts: [
+      { value: 420, label: "420 CP" },
+      { value: 1100, label: "1,100 CP" },
+      { value: 2400, label: "2,400 CP" },
+      { value: 5000, label: "5,000 CP" },
     ],
   },
 ];

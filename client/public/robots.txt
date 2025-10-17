@@ -1,7 +1,19 @@
+# robots.txt for SalmawyGaming
+# Allow all crawlers to access public pages, but block internal/backend routes.
+
 User-agent: *
+Disallow: /api
+Disallow: /server
+Disallow: /server-lambda
+Disallow: /netlify/functions
+Disallow: /dist
+Disallow: /node_modules
+
+# Allow everything else
 Allow: /
 
+# Sitemap (keep this in sync with your deployed domain)
 Sitemap: https://salmawy.vercel.app/sitemap.xml
 
-# Crawl-delay for respectful crawling
+# Optional: give bots a small crawl-delay to reduce server load
 Crawl-delay: 1
