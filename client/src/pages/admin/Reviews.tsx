@@ -95,9 +95,9 @@ export default function Reviews() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Customer</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Game</TableHead>
                   <TableHead>Rating</TableHead>
-                  <TableHead>Purchase</TableHead>
-                  <TableHead>Date</TableHead>
                   <TableHead>Comment</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -108,9 +108,11 @@ export default function Reviews() {
                   filteredReviews.map((review) => (
                     <TableRow key={review.id} data-testid={`row-review-${review.id}`}>
                       <TableCell className="font-medium">{review.name}</TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {review.email || <span className="italic">Not provided</span>}
+                      </TableCell>
+                      <TableCell>{review.game}</TableCell>
                       <TableCell>{renderStars(review.rating)}</TableCell>
-                      <TableCell>{review.purchaseAmount}</TableCell>
-                      <TableCell>{review.gameDate}</TableCell>
                       <TableCell className="max-w-xs truncate">
                         {review.comment || <span className="text-muted-foreground italic">No comment</span>}
                       </TableCell>

@@ -351,4 +351,29 @@
       transform: scale(1.1);
     }
   }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--primary) / 0.2);
+    border-radius: 4px;
+  }
+
+  .scrollbar-thin:hover::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--primary) / 0.4);
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--primary) / 0.3);
+  }
+
+  .dark .scrollbar-thin:hover::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--primary) / 0.5);
+  }
 }
