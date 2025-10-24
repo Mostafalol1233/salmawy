@@ -136,10 +136,10 @@ export class DatabaseStorage implements IStorage {
   async updateReview(id: number, review: Partial<InsertReview>): Promise<SelectReview | null> {
     const updateData: Partial<typeof schema.reviews.$inferInsert> = {};
     if (review.name !== undefined) updateData.name = review.name;
+    if (review.email !== undefined) updateData.email = review.email;
+    if (review.game !== undefined) updateData.game = review.game;
     if (review.rating !== undefined) updateData.rating = review.rating;
     if (review.comment !== undefined) updateData.comment = review.comment;
-    if (review.purchaseAmount !== undefined) updateData.purchaseAmount = review.purchaseAmount;
-    if (review.gameDate !== undefined) updateData.gameDate = review.gameDate;
     if (review.isApproved !== undefined) updateData.isApproved = review.isApproved;
     
     const [updated] = await db.update(schema.reviews)

@@ -26,10 +26,10 @@ export const productPrices = pgTable("product_prices", {
 export const reviews = pgTable("reviews", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   name: text("name").notNull(),
+  email: text("email"),
+  game: text("game").notNull(),
   rating: integer("rating").notNull(),
   comment: text("comment"),
-  purchaseAmount: text("purchase_amount").notNull(),
-  gameDate: text("game_date").notNull(),
   isApproved: boolean("is_approved").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
@@ -90,10 +90,10 @@ export const insertProductPriceSchema = z.object({
 
 export const insertReviewSchema = z.object({
   name: z.string(),
+  email: z.string().email().optional().or(z.literal("")),
+  game: z.string(),
   rating: z.number().min(1).max(5),
   comment: z.string().optional(),
-  purchaseAmount: z.string(),
-  gameDate: z.string(),
   isApproved: z.boolean().default(false),
 });
 
