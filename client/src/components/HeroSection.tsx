@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Globe } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import heroVideo from "@assets/clideo_editor_8a556c51557b41029d2f8dc30a022ca9 (online-video-cutter.com)_1760565168452.mp4";
 import galaxyBg from "@assets/generated_images/Galaxy_stars_space_background_7ba46401.png";
 
@@ -12,10 +13,10 @@ interface HeroSectionProps {
 export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSectionProps) {
 
   return (
-    <section className="relative min-h-screen flex flex-col bg-black">
+    <section className="relative min-h-screen flex flex-col bg-black dark:bg-background">
       {/* Galaxy Background */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50 dark:opacity-30"
         style={{ 
           backgroundImage: `url('/galaxy-bg.png')`,
           backgroundSize: 'cover',
@@ -25,7 +26,7 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
       />
       
       {/* Additional overlay for better visibility */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-black/40" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-black/40 dark:from-blue-900/10 dark:via-purple-900/10 dark:to-black/60" />
 
       <div className="hidden md:flex absolute inset-0 z-0 items-center justify-end">
         <video 
@@ -47,19 +48,22 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
             alt="Slamawy Logo" 
             className="w-20 h-20 object-contain"
           />
-          <h2 className="text-white font-bold text-lg">SLAMAWY STORE</h2>
+          <h2 className="text-white dark:text-foreground font-bold text-lg">SLAMAWY STORE</h2>
         </div>
 
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onLanguageToggle}
-          className="gap-2 text-white text-sm"
-          data-testid="button-language-toggle"
-        >
-          <Globe className="w-4 h-4" />
-          <span>{isArabic ? "Translate to English" : "Translate to Arabic"}</span>
-        </Button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onLanguageToggle}
+            className="gap-2 text-white dark:text-foreground text-sm"
+            data-testid="button-language-toggle"
+          >
+            <Globe className="w-4 h-4" />
+            <span>{isArabic ? "Translate to English" : "Translate to Arabic"}</span>
+          </Button>
+        </div>
       </div>
 
       <div className="relative z-10 px-6 md:px-12 lg:px-16 max-w-7xl w-full flex-1 flex flex-col justify-center md:justify-center">
