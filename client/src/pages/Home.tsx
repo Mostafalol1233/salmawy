@@ -32,9 +32,10 @@ interface GameProduct {
 interface Review {
   id: string;
   name: string;
+  email?: string;
+  game: string;
   rating: number;
-  purchaseAmount: string;
-  gameDate: string;
+  comment?: string;
 }
 
 import crossfireImg from "@assets/generated_images/CrossFire_gaming_card_product_e40032b2.png";
@@ -159,19 +160,19 @@ const products: GameProduct[] = [
 ];
 
 const reviews: Review[] = [
-  { id: "1", name: "Ahmed", rating: 5, purchaseAmount: "1,000 Diamonds", gameDate: "Jan 2025" },
-  { id: "2", name: "Mohammed", rating: 5, purchaseAmount: "500 UC", gameDate: "Feb 2025" },
-  { id: "3", name: "Sarah", rating: 5, purchaseAmount: "2,000 VP", gameDate: "Mar 2025" },
-  { id: "4", name: "Fatima", rating: 5, purchaseAmount: "10,000 ZP", gameDate: "Apr 2025" },
-  { id: "5", name: "Ali", rating: 5, purchaseAmount: "5,000 V-Bucks", gameDate: "May 2025" },
-  { id: "6", name: "Omar", rating: 5, purchaseAmount: "1,000 RP", gameDate: "Jun 2025" },
+  { id: "1", name: "Ahmed", rating: 5, game: "Free Fire", comment: "Fast delivery and great service!" },
+  { id: "2", name: "Mohammed", rating: 5, game: "PUBG Mobile", comment: "Reliable and trusted!" },
+  { id: "3", name: "Sarah", rating: 5, game: "Valorant", comment: "Best prices, highly recommend!" },
+  { id: "4", name: "Fatima", rating: 5, game: "CrossFire", comment: "Quick and professional!" },
+  { id: "5", name: "Ali", rating: 5, game: "Fortnite", comment: "Amazing service!" },
+  { id: "6", name: "Omar", rating: 5, game: "League of Legends", comment: "Very satisfied!" },
 ];
 
 const reviewFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email").optional().or(z.literal("")),
+  game: z.string().min(1, "Game name is required"),
   rating: z.number().min(1).max(5),
-  purchaseAmount: z.string().min(1, "Purchase amount is required"),
-  gameDate: z.string().min(1, "Game date is required"),
   comment: z.string().optional(),
 });
 
@@ -210,9 +211,9 @@ export default function Home() {
     resolver: zodResolver(reviewFormSchema),
     defaultValues: {
       name: "",
+      email: "",
+      game: "",
       rating: 5,
-      purchaseAmount: "",
-      gameDate: "",
       comment: "",
     },
   });
@@ -318,22 +319,31 @@ export default function Home() {
 
       <RequestSection isArabic={isArabic} whatsappNumber={whatsappNumber} />
 
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 bg-background dark:bg-background">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-foreground">
-            {isArabic ? "عملاء موثوقون" : "Trusted Customers"}
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 text-foreground dark:text-foreground">
+            {isArabic ? "آراء العملاء" : "Customer Reviews"}
           </h2>
+          <p className="text-center text-muted-foreground dark:text-muted-foreground mb-8">
+            {isArabic ? "ما يقوله عملاؤنا عنا" : "What our customers say about us"}
+          </p>
           {reviewsLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-32 bg-card rounded-md animate-pulse" />
-              ))}
+            <div className="h-[400px] overflow-hidden">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="h-48 bg-card dark:bg-card rounded-md animate-pulse" />
+                ))}
+              </div>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              {displayReviews.map((review) => (
-                <ReviewCard key={review.id} review={review} />
-              ))}
+            <div className="relative">
+              <div className="max-h-[500px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent hover:scrollbar-thumb-primary/40">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
+                  {displayReviews.map((review) => (
+                    <ReviewCard key={review.id} review={review} />
+                  ))}
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -377,6 +387,43 @@ export default function Home() {
 
                   <FormField
                     control={reviewForm.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{isArabic ? "البريد الإلكتروني (اختياري)" : "Email (Optional)"}</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="email"
+                            placeholder={isArabic ? "مثال: example@email.com" : "e.g., example@email.com"}
+                            data-testid="input-review-email"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={reviewForm.control}
+                    name="game"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{isArabic ? "اسم اللعبة" : "Game Name"}</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder={isArabic ? "مثال: PUBG Mobile" : "e.g., PUBG Mobile"}
+                            data-testid="input-review-game"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={reviewForm.control}
                     name="rating"
                     render={({ field }) => (
                       <FormItem>
@@ -409,44 +456,6 @@ export default function Home() {
                       </FormItem>
                     )}
                   />
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={reviewForm.control}
-                      name="purchaseAmount"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{isArabic ? "المبلغ المشترى" : "Purchase Amount"}</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder={isArabic ? "مثال: 1000 UC" : "e.g., 1000 UC"}
-                              data-testid="input-review-purchase"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={reviewForm.control}
-                      name="gameDate"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{isArabic ? "تاريخ اللعبة" : "Game Date"}</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder={isArabic ? "مثال: يناير 2025" : "e.g., Jan 2025"}
-                              data-testid="input-review-date"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
 
                   <FormField
                     control={reviewForm.control}
