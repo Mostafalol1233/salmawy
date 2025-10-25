@@ -1,4 +1,4 @@
-const { neon } = require("@neondatabase/serverless");
+import { neon } from "@neondatabase/serverless";
 
 async function createAdmin() {
   const sql = neon(process.env.DATABASE_URL);
