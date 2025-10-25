@@ -2,6 +2,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Heart, Globe2 } from "lucide-react";
 import { SiFacebook } from "react-icons/si";
+import { useTheme } from "@/components/ThemeProvider";
+import darkBrandLogo from "@assets/image_1761353724854.png";
+import lightBrandLogo from "@assets/generated_images/Slamawy_light_mode_logo_25cbae0c.png";
 
 interface AboutSectionProps {
   isArabic: boolean;
@@ -9,6 +12,8 @@ interface AboutSectionProps {
 }
 
 export function AboutSection({ isArabic, whatsappNumber = "2001027308353" }: AboutSectionProps) {
+  const { theme } = useTheme();
+  
   return (
     <section className="py-16 px-4 bg-card/30">
       <div className="max-w-7xl mx-auto">
@@ -17,9 +22,10 @@ export function AboutSection({ isArabic, whatsappNumber = "2001027308353" }: Abo
             {/* SLAMAWY Logo */}
             <div className="flex justify-center mb-6">
               <img 
-                src="/logodown.png" 
+                src={theme === 'dark' ? darkBrandLogo : lightBrandLogo}
                 alt="Slamawy Logo" 
-                className="max-w-md w-full h-auto object-contain"
+                className="max-w-md w-full h-auto object-contain transition-all duration-500"
+                data-testid="img-brand-logo"
               />
             </div>
             

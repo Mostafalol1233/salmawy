@@ -50,7 +50,7 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
       <div className="absolute top-0 left-0 right-0 z-20 p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <img 
-            src={theme === 'dark' ? lightModeLogo : darkModeLogo} 
+            src={theme === 'dark' ? darkModeLogo : lightModeLogo} 
             alt="Slamawy Logo" 
             className="w-20 h-20 object-contain transition-all duration-500"
           />

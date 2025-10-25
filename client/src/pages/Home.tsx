@@ -17,6 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Star, AlertCircle, CheckCircle, Info, X } from "lucide-react";
@@ -340,18 +341,61 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="space-y-12">
-              {Object.entries(groupedProducts).map(([category, categoryProducts]) => {
-                if (categoryProducts.length === 0) return null;
-                
+            <Tabs defaultValue="all" className="w-full">
+              <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-4 mb-8" data-testid="tabs-product-categories">
+                <TabsTrigger value="all" data-testid="tab-all">
+                  {isArabic ? "الكل" : "All"}
+                </TabsTrigger>
+                <TabsTrigger value="games" data-testid="tab-games">
+                  {isArabic ? "الألعاب" : "Gaming"}
+                </TabsTrigger>
+                <TabsTrigger value="subscriptions" data-testid="tab-subscriptions">
+                  {isArabic ? "الاشتراكات" : "Subscriptions"}
+                </TabsTrigger>
+                <TabsTrigger value="social_media" data-testid="tab-social">
+                  {isArabic ? "السوشيال" : "Social"}
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="all" className="space-y-12">
+                {Object.entries(groupedProducts).map(([category, categoryProducts]) => {
+                  if (categoryProducts.length === 0) return null;
+                  
+                  const info = categoryInfo[category as keyof typeof categoryInfo] || {
+                    title: category.charAt(0).toUpperCase() + category.slice(1).replace('_', ' '),
+                    icon: gamingCategoryIcon,
+                    description: isArabic ? 'منتجات أخرى' : 'Other products'
+                  };
+                  
+                  return (
+                    <div key={category} className="space-y-6">
+                      <div className="flex items-center gap-4 pb-4 border-b border-border">
+                        <img src={info.icon} alt={info.title} className="w-12 h-12 object-contain" />
+                        <div>
+                          <h3 className="text-2xl font-bold text-foreground">{info.title}</h3>
+                          <p className="text-sm text-muted-foreground">{info.description}</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {categoryProducts.map((product) => (
+                          <ProductCard key={product.id} product={product} isArabic={isArabic} whatsappNumber={whatsappNumber} />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </TabsContent>
+
+              {['games', 'subscriptions', 'social_media'].map((category) => {
+                const categoryProducts = groupedProducts[category] || [];
                 const info = categoryInfo[category as keyof typeof categoryInfo] || {
                   title: category.charAt(0).toUpperCase() + category.slice(1).replace('_', ' '),
                   icon: gamingCategoryIcon,
                   description: isArabic ? 'منتجات أخرى' : 'Other products'
                 };
-                
+
                 return (
-                  <div key={category} className="space-y-6">
+                  <TabsContent key={category} value={category} className="space-y-6">
                     <div className="flex items-center gap-4 pb-4 border-b border-border">
                       <img src={info.icon} alt={info.title} className="w-12 h-12 object-contain" />
                       <div>
@@ -359,15 +403,23 @@ export default function Home() {
                         <p className="text-sm text-muted-foreground">{info.description}</p>
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                      {categoryProducts.map((product) => (
-                        <ProductCard key={product.id} product={product} isArabic={isArabic} whatsappNumber={whatsappNumber} />
-                      ))}
-                    </div>
-                  </div>
+                    {categoryProducts.length === 0 ? (
+                      <div className="text-center py-12">
+                        <p className="text-muted-foreground" data-testid={`text-no-products-${category}`}>
+                          {isArabic ? 'لا توجد منتجات في هذه الفئة حالياً' : 'No products in this category yet'}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {categoryProducts.map((product) => (
+                          <ProductCard key={product.id} product={product} isArabic={isArabic} whatsappNumber={whatsappNumber} />
+                        ))}
+                      </div>
+                    )}
+                  </TabsContent>
                 );
               })}
-            </div>
+            </Tabs>
           )}
         </div>
       </section>

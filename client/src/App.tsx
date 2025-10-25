@@ -7,6 +7,8 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Analytics } from "@vercel/analytics/react";
 import Home from "@/pages/Home";
 import SocialMediaServices from "@/pages/SocialMediaServices";
+import BlogIndex from "@/pages/BlogIndex";
+import BlogPost from "@/pages/BlogPost";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminRedirect from "@/pages/AdminRedirect";
 import Dashboard from "@/pages/admin/Dashboard";
@@ -17,6 +19,8 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/services" component={SocialMediaServices} />
+      <Route path="/blog" component={BlogIndex} />
+      <Route path="/blog/:slug" component={BlogPost} />
       <Route path="/admin" component={AdminRedirect} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/dashboard/:rest*" component={Dashboard} />
