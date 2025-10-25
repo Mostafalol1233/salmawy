@@ -55,10 +55,13 @@ git push -u origin main
 
 Vercel should auto-detect these settings, but verify:
 
-- **Framework Preset**: Vite
+- **Framework Preset**: Other (or None)
 - **Build Command**: `npm run build`
-- **Output Directory**: `dist`
+- **Output Directory**: `dist/public`
 - **Install Command**: `npm install`
+- **Node.js Version**: 20.x
+
+**Important**: The app uses serverless functions for the backend API routes located in the `/api` directory.
 
 ## Step 4: Add Environment Variables
 
