@@ -44,9 +44,9 @@ export function ProductCard({ product, isArabic, whatsappNumber = "2001027308353
             {isArabic ? "اختر الكمية:" : "Select Amount:"}
           </p>
           <div className="flex flex-wrap gap-2">
-            {productPrices.map((amount) => (
+            {productPrices.map((amount, index) => (
               <Badge
-                key={amount.value}
+                key={`${product.id}-${amount.value}-${index}`}
                 variant={selectedAmount.value === amount.value ? "default" : "secondary"}
                 className="cursor-pointer px-3 py-1.5 text-sm hover-elevate active-elevate-2"
                 onClick={() => setSelectedAmount(amount)}
