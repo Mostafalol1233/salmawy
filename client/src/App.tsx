@@ -8,6 +8,7 @@ import { Analytics } from "@vercel/analytics/react";
 import Home from "@/pages/Home";
 import SocialMediaServices from "@/pages/SocialMediaServices";
 import AdminLogin from "@/pages/AdminLogin";
+import AdminRedirect from "@/pages/AdminRedirect";
 import Dashboard from "@/pages/admin/Dashboard";
 import NotFound from "@/pages/not-found";
 
@@ -16,6 +17,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/services" component={SocialMediaServices} />
+      <Route path="/admin" component={AdminRedirect} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/dashboard/:rest*" component={Dashboard} />
       <Route component={NotFound} />

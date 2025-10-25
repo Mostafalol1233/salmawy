@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Star, AlertCircle, CheckCircle, Info, X } from "lucide-react";
@@ -26,6 +27,7 @@ interface GameProduct {
   name: string;
   currency: string;
   image: string;
+  category?: string;
   amounts: { value: number; label: string; price?: string }[];
 }
 
@@ -47,6 +49,9 @@ import lolImg from "@assets/generated_images/League_of_Legends_gaming_card_a7805
 import fortniteImg from "@assets/generated_images/Fortnite_gaming_card_product_e08a005e.png";
 import robloxImg from "@assets/generated_images/Roblox_gaming_card.png";
 import codImg from "@assets/generated_images/Call_of_Duty_gaming_card.png";
+import gamingCategoryIcon from "@assets/generated_images/Gaming_category_icon_f03cb930.png";
+import subscriptionsCategoryIcon from "@assets/generated_images/Subscriptions_category_icon_45229c5f.png";
+import socialMediaCategoryIcon from "@assets/generated_images/Social_media_category_icon_510bf088.png";
 
 const products: GameProduct[] = [
   {
@@ -242,6 +247,33 @@ export default function Home() {
   const displayProducts = productsData && productsData.length > 0 ? productsData : products;
   const displayReviews = reviewsData && reviewsData.length > 0 ? reviewsData : reviews;
 
+  const groupedProducts = displayProducts.reduce((acc, product) => {
+    const category = product.category || 'games';
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(product);
+    return acc;
+  }, {} as Record<string, typeof displayProducts>);
+
+  const categoryInfo = {
+    games: {
+      title: isArabic ? 'الألعاب' : 'Gaming Cards',
+      icon: gamingCategoryIcon,
+      description: isArabic ? 'بطاقات شحن للألعاب المفضلة لديك' : 'Top-up cards for your favorite games'
+    },
+    subscriptions: {
+      title: isArabic ? 'الاشتراكات' : 'Subscriptions',
+      icon: subscriptionsCategoryIcon,
+      description: isArabic ? 'اشتراكات Discord Nitro وغيرها' : 'Discord Nitro and other premium subscriptions'
+    },
+    social_media: {
+      title: isArabic ? 'وسائل التواصل الاجتماعي' : 'Social Media Services',
+      icon: socialMediaCategoryIcon,
+      description: isArabic ? 'خدمات لزيادة المتابعين والإعجابات' : 'Boost your followers and engagement'
+    }
+  };
+
   const handleShopClick = () => {
     productsRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -308,10 +340,33 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {displayProducts.map((product) => (
-                <ProductCard key={product.id} product={product} isArabic={isArabic} whatsappNumber={whatsappNumber} />
-              ))}
+            <div className="space-y-12">
+              {Object.entries(groupedProducts).map(([category, categoryProducts]) => {
+                if (categoryProducts.length === 0) return null;
+                
+                const info = categoryInfo[category as keyof typeof categoryInfo] || {
+                  title: category.charAt(0).toUpperCase() + category.slice(1).replace('_', ' '),
+                  icon: gamingCategoryIcon,
+                  description: isArabic ? 'منتجات أخرى' : 'Other products'
+                };
+                
+                return (
+                  <div key={category} className="space-y-6">
+                    <div className="flex items-center gap-4 pb-4 border-b border-border">
+                      <img src={info.icon} alt={info.title} className="w-12 h-12 object-contain" />
+                      <div>
+                        <h3 className="text-2xl font-bold text-foreground">{info.title}</h3>
+                        <p className="text-sm text-muted-foreground">{info.description}</p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {categoryProducts.map((product) => (
+                        <ProductCard key={product.id} product={product} isArabic={isArabic} whatsappNumber={whatsappNumber} />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -410,13 +465,29 @@ export default function Home() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{isArabic ? "اسم اللعبة" : "Game Name"}</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder={isArabic ? "مثال: PUBG Mobile" : "e.g., PUBG Mobile"}
-                            data-testid="input-review-game"
-                          />
-                        </FormControl>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger data-testid="select-review-game">
+                              <SelectValue placeholder={isArabic ? "اختر اللعبة" : "Select a game"} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="CrossFire">CrossFire</SelectItem>
+                            <SelectItem value="Free Fire">Free Fire</SelectItem>
+                            <SelectItem value="PUBG Mobile">PUBG Mobile</SelectItem>
+                            <SelectItem value="Valorant">Valorant</SelectItem>
+                            <SelectItem value="Genshin Impact">Genshin Impact</SelectItem>
+                            <SelectItem value="League of Legends">League of Legends</SelectItem>
+                            <SelectItem value="Fortnite">Fortnite</SelectItem>
+                            <SelectItem value="Roblox">Roblox</SelectItem>
+                            <SelectItem value="Call of Duty">Call of Duty</SelectItem>
+                            <SelectItem value="Discord Nitro">Discord Nitro</SelectItem>
+                            <SelectItem value="Instagram">Instagram</SelectItem>
+                            <SelectItem value="Facebook">Facebook</SelectItem>
+                            <SelectItem value="TikTok">TikTok</SelectItem>
+                            <SelectItem value="Other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}

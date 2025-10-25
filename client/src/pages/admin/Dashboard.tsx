@@ -4,6 +4,7 @@ import { useLocation, Link, Route, Switch } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   LayoutDashboard,
   Package,
@@ -79,9 +80,12 @@ export default function Dashboard() {
         {/* Sidebar */}
         <aside className="w-64 min-h-screen bg-card border-r border-border">
           <div className="p-6 border-b border-border">
-            <div className="flex items-center gap-2">
-              <LayoutDashboard className="w-6 h-6 text-primary" />
-              <h1 className="text-xl font-bold text-foreground">Admin Panel</h1>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <LayoutDashboard className="w-6 h-6 text-primary" />
+                <h1 className="text-xl font-bold text-foreground">Admin Panel</h1>
+              </div>
+              <ThemeToggle />
             </div>
             <p className="text-sm text-muted-foreground mt-1">
               Welcome, {session.username}
