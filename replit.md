@@ -6,8 +6,13 @@ Slamawy Store is an Egyptian-based gaming cards e-commerce platform specializing
 
 ## Recent Changes (October 25, 2025)
 
-### Latest Updates - Deployment Preparation
-- **Dark Mode Default**: Changed default theme to dark mode for better user experience - website now opens in dark mode by default
+### Latest Updates - Bug Fixes & Improvements
+- **Dark Mode Default Fixed**: Changed `App.tsx` defaultTheme from "light" to "dark" - new users now see dark mode by default without needing to toggle
+- **Admin Dashboard Redirect Fixed**: Added automatic redirect from `/admin/dashboard` to `/admin/dashboard/products` so admins see content immediately instead of empty welcome page
+- **Database Verification**: Confirmed all 15 products (9 gaming, 3 subscriptions, 3 social media) are properly stored and accessible via API
+- **API Routes Verified**: All routes working correctly including POST /api/reviews for review submission and blog comment endpoints
+
+### Previous Updates - Deployment Preparation
 - **Games Category Priority**: Updated product category sorting to display games first in the "All Products" tab
 - **Developer Credit**: Added visible footer credit "Made with ❤️ by Mustafa" with link to linktr.ee/Mustafa_Bemo
 - **Deployment Configuration**: Created comprehensive deployment guides (VERCEL_DEPLOYMENT.md, GITHUB_DEPLOYMENT.md) and .env.example template for production deployment
