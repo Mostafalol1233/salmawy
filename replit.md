@@ -6,19 +6,24 @@ Slamawy Store is an Egyptian-based gaming cards e-commerce platform specializing
 
 ## Recent Changes (October 25, 2025)
 
-### Latest Updates
+### Latest Updates - Deployment Preparation
+- **Dark Mode Default**: Changed default theme to dark mode for better user experience - website now opens in dark mode by default
+- **Games Category Priority**: Updated product category sorting to display games first in the "All Products" tab
+- **Developer Credit**: Added visible footer credit "Made with ❤️ by Mustafa" with link to linktr.ee/Mustafa_Bemo
+- **Deployment Configuration**: Created comprehensive deployment guides (VERCEL_DEPLOYMENT.md, GITHUB_DEPLOYMENT.md) and .env.example template for production deployment
+- **Security Enhancement**: Updated .gitignore to properly exclude .env files, logs, and other sensitive data from version control
+
+### Previous Updates
 - **Gaming Products Database Restoration**: Added all 9 gaming products to database (CrossFire, Free Fire, PUBG Mobile, Valorant, Genshin Impact, League of Legends, Fortnite, Roblox, Call of Duty) making them available in the admin dashboard for management
 - **Product Icon Images Upgrade**: Replaced text-based UI Avatar placeholders with proper icon images for all subscription services (Discord Nitro, ChatGPT Plus, Spotify Premium) and social media services (Instagram, TikTok, YouTube)
 - **ProductCard Bug Fix**: Resolved React duplicate key warning by implementing unique composite keys using product ID, value, and index
 - **Dashboard Testing**: Comprehensive testing of all admin features including site settings updates, announcement management, product CRUD operations, review approvals, blog post creation, and social link management
 - **Blog Comments System**: Implemented complete commenting functionality for blog posts with admin moderation, database schema (blogComments table), storage methods, API routes, and UI components with loading states
 - **Enhanced Blog Editor**: Added advanced formatting options including code blocks (inline and block), blockquotes, horizontal rules, strikethrough, ordered/unordered lists for rich content creation
-
-### Previous Updates
 - **Blog Functionality**: Added public-facing blog pages at `/blog` (listing) and `/blog/:slug` (individual posts) with markdown support and theme-aware design
 - **Product Category Filtering**: Implemented tab-based filtering on the home page allowing users to browse products by category (All, Gaming, Subscriptions, Social Media)
 - **Theme-Aware Branding**: Updated all logo displays (HeroSection and AboutSection) to automatically switch between light and dark mode versions
-- **Generated Assets**: Created light mode Slamawy brand logo to complement the existing dark mode version
+
 
 ## User Preferences
 

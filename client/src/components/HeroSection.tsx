@@ -60,13 +60,13 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
 
         <nav className="hidden md:flex items-center gap-1">
           <Link href="/blog">
-            <a 
-              className="flex items-center gap-2 px-4 py-2 rounded-md text-gray-800 dark:text-foreground hover:bg-gray-200 dark:hover:bg-accent transition-colors font-medium text-sm"
+            <div 
+              className="flex items-center gap-2 px-4 py-2 rounded-md text-gray-800 dark:text-foreground hover:bg-gray-200 dark:hover:bg-accent transition-colors font-medium text-sm cursor-pointer"
               data-testid="link-blog"
             >
               <BookOpen className="w-4 h-4" />
               <span>{isArabic ? "المدونة" : "Blog"}</span>
-            </a>
+            </div>
           </Link>
         </nav>
 
