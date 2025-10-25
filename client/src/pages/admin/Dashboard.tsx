@@ -41,6 +41,12 @@ export default function Dashboard() {
     }
   }, [session, isLoading, setLocation]);
 
+  useEffect(() => {
+    if (location === "/admin/dashboard" || location === "/admin/dashboard/") {
+      setLocation("/admin/dashboard/products");
+    }
+  }, [location, setLocation]);
+
   const logoutMutation = useMutation({
     mutationFn: async () => {
       await apiRequest("POST", "/api/admin/logout");
