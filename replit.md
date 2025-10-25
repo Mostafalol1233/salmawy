@@ -4,6 +4,13 @@
 
 Slamawy Store is an Egyptian-based gaming cards e-commerce platform specializing in digital game currency and gaming cards. The application provides a bilingual (English/Arabic) shopping experience with WhatsApp integration for order processing and customer support. The platform features popular gaming products including PUBG UC, Free Fire Diamonds, Valorant VP, CrossFire ZP, Genshin Impact, League of Legends, Fortnite, Roblox, and Call of Duty cards.
 
+## Recent Changes (October 25, 2025)
+
+- **Blog Functionality**: Added public-facing blog pages at `/blog` (listing) and `/blog/:slug` (individual posts) with markdown support and theme-aware design
+- **Product Category Filtering**: Implemented tab-based filtering on the home page allowing users to browse products by category (All, Gaming, Subscriptions, Social Media)
+- **Theme-Aware Branding**: Updated all logo displays (HeroSection and AboutSection) to automatically switch between light and dark mode versions
+- **Generated Assets**: Created light mode Slamawy brand logo to complement the existing dark mode version
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
