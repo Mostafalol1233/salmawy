@@ -72,6 +72,49 @@ export const admins = pgTable("admins", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+export const siteSettings = pgTable("site_settings", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  siteTitle: text("site_title").notNull().default("Slamawy Store"),
+  heroTitle: text("hero_title").notNull().default("Welcome to Slamawy Store"),
+  heroSubtitle: text("hero_subtitle").notNull().default("Trusted & Fast Delivery"),
+  whatsappNumber: text("whatsapp_number").notNull().default("+201000000000"),
+  location: text("location").notNull().default("Egypt"),
+  locationDetails: text("location_details"),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const socialLinks = pgTable("social_links", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  platform: text("platform").notNull(),
+  url: text("url").notNull(),
+  icon: text("icon").notNull(),
+  isActive: boolean("is_active").notNull().default(true),
+  order: integer("order").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const blogPosts = pgTable("blog_posts", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  content: text("content").notNull(),
+  excerpt: text("excerpt"),
+  featuredImage: text("featured_image"),
+  isPublished: boolean("is_published").notNull().default(false),
+  publishedAt: timestamp("published_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const blogImages = pgTable("blog_images", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  postId: integer("post_id").references(() => blogPosts.id, { onDelete: "cascade" }),
+  url: text("url").notNull(),
+  alt: text("alt"),
+  caption: text("caption"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const insertProductSchema = z.object({
   name: z.string(),
   currency: z.string(),
@@ -125,6 +168,40 @@ export const insertAdminSchema = z.object({
   password: z.string(),
 });
 
+export const insertSiteSettingsSchema = z.object({
+  siteTitle: z.string(),
+  heroTitle: z.string(),
+  heroSubtitle: z.string(),
+  whatsappNumber: z.string(),
+  location: z.string(),
+  locationDetails: z.string().optional(),
+});
+
+export const insertSocialLinkSchema = z.object({
+  platform: z.string(),
+  url: z.string().url(),
+  icon: z.string(),
+  isActive: z.boolean().default(true),
+  order: z.number().default(0),
+});
+
+export const insertBlogPostSchema = z.object({
+  title: z.string(),
+  slug: z.string(),
+  content: z.string(),
+  excerpt: z.string().optional(),
+  featuredImage: z.string().optional(),
+  isPublished: z.boolean().default(false),
+  publishedAt: z.string().optional(),
+});
+
+export const insertBlogImageSchema = z.object({
+  postId: z.number().optional(),
+  url: z.string(),
+  alt: z.string().optional(),
+  caption: z.string().optional(),
+});
+
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type InsertProductPrice = z.infer<typeof insertProductPriceSchema>;
 export type InsertReview = z.infer<typeof insertReviewSchema>;
@@ -132,6 +209,10 @@ export type InsertAnnouncement = z.infer<typeof insertAnnouncementSchema>;
 export type InsertSocialMediaService = z.infer<typeof insertSocialMediaServiceSchema>;
 export type InsertSocialMediaPrice = z.infer<typeof insertSocialMediaPriceSchema>;
 export type InsertAdmin = z.infer<typeof insertAdminSchema>;
+export type InsertSiteSettings = z.infer<typeof insertSiteSettingsSchema>;
+export type InsertSocialLink = z.infer<typeof insertSocialLinkSchema>;
+export type InsertBlogPost = z.infer<typeof insertBlogPostSchema>;
+export type InsertBlogImage = z.infer<typeof insertBlogImageSchema>;
 
 export type SelectProduct = typeof products.$inferSelect;
 export type SelectProductPrice = typeof productPrices.$inferSelect;
@@ -140,6 +221,10 @@ export type SelectAnnouncement = typeof announcements.$inferSelect;
 export type SelectSocialMediaService = typeof socialMediaServices.$inferSelect;
 export type SelectSocialMediaPrice = typeof socialMediaPrices.$inferSelect;
 export type SelectAdmin = typeof admins.$inferSelect;
+export type SelectSiteSettings = typeof siteSettings.$inferSelect;
+export type SelectSocialLink = typeof socialLinks.$inferSelect;
+export type SelectBlogPost = typeof blogPosts.$inferSelect;
+export type SelectBlogImage = typeof blogImages.$inferSelect;
 
 export interface ProductWithPrices extends SelectProduct {
   prices: SelectProductPrice[];
@@ -147,4 +232,8 @@ export interface ProductWithPrices extends SelectProduct {
 
 export interface SocialMediaServiceWithPrices extends SelectSocialMediaService {
   prices: SelectSocialMediaPrice[];
+}
+
+export interface BlogPostWithImages extends SelectBlogPost {
+  images: SelectBlogImage[];
 }

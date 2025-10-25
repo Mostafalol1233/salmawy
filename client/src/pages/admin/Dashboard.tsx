@@ -11,12 +11,16 @@ import {
   MessageSquare,
   Megaphone,
   Share2,
+  Settings,
   LogOut,
+  FileText,
 } from "lucide-react";
 import Products from "./Products";
 import Reviews from "./Reviews";
 import Announcements from "./Announcements";
 import SocialMediaServices from "./SocialMediaServices";
+import SiteSettings from "./SiteSettings";
+import Blog from "./Blog";
 
 interface SessionResponse {
   authenticated: boolean;
@@ -72,6 +76,8 @@ export default function Dashboard() {
     { path: "/admin/dashboard/reviews", label: "Reviews", icon: MessageSquare },
     { path: "/admin/dashboard/announcements", label: "Announcements", icon: Megaphone },
     { path: "/admin/dashboard/services", label: "Social Media", icon: Share2 },
+    { path: "/admin/dashboard/blog", label: "Blog", icon: FileText },
+    { path: "/admin/dashboard/settings", label: "Settings", icon: Settings },
   ];
 
   return (
@@ -135,6 +141,8 @@ export default function Dashboard() {
             <Route path="/admin/dashboard/reviews" component={Reviews} />
             <Route path="/admin/dashboard/announcements" component={Announcements} />
             <Route path="/admin/dashboard/services" component={SocialMediaServices} />
+            <Route path="/admin/dashboard/blog" component={Blog} />
+            <Route path="/admin/dashboard/settings" component={SiteSettings} />
             <Route path="/admin/dashboard">
               <div className="text-center mt-20">
                 <h2 className="text-2xl font-bold text-foreground mb-4">

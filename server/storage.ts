@@ -1,6 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, asc } from "drizzle-orm";
 import * as schema from "@shared/schema";
 import type {
   InsertProduct,
@@ -10,6 +10,10 @@ import type {
   InsertSocialMediaService,
   InsertSocialMediaPrice,
   InsertAdmin,
+  InsertSiteSettings,
+  InsertSocialLink,
+  InsertBlogPost,
+  InsertBlogImage,
   SelectProduct,
   SelectProductPrice,
   SelectReview,
@@ -17,8 +21,13 @@ import type {
   SelectSocialMediaService,
   SelectSocialMediaPrice,
   SelectAdmin,
+  SelectSiteSettings,
+  SelectSocialLink,
+  SelectBlogPost,
+  SelectBlogImage,
   ProductWithPrices,
   SocialMediaServiceWithPrices,
+  BlogPostWithImages,
 } from "@shared/schema";
 
 if (!process.env.DATABASE_URL) {
@@ -33,6 +42,7 @@ export interface IStorage {
   getProduct(id: number): Promise<ProductWithPrices | null>;
   createProduct(product: InsertProduct, prices: Omit<InsertProductPrice, "productId">[]): Promise<ProductWithPrices>;
   updateProduct(id: number, product: Partial<InsertProduct>): Promise<ProductWithPrices | null>;
+  updateProductWithPrices(id: number, product: Partial<InsertProduct>, prices: Omit<InsertProductPrice, "productId">[]): Promise<ProductWithPrices | null>;
   deleteProduct(id: number): Promise<boolean>;
   
   getReviews(approved?: boolean): Promise<SelectReview[]>;
@@ -56,6 +66,26 @@ export interface IStorage {
   
   getAdminByUsername(username: string): Promise<SelectAdmin | null>;
   createAdmin(admin: InsertAdmin): Promise<SelectAdmin>;
+  
+  getSiteSettings(): Promise<SelectSiteSettings>;
+  updateSiteSettings(settings: Partial<InsertSiteSettings>): Promise<SelectSiteSettings>;
+  
+  getAllSocialLinks(): Promise<SelectSocialLink[]>;
+  createSocialLink(link: InsertSocialLink): Promise<SelectSocialLink>;
+  updateSocialLink(id: number, link: Partial<InsertSocialLink>): Promise<SelectSocialLink | null>;
+  deleteSocialLink(id: number): Promise<boolean>;
+  
+  getAllBlogPosts(): Promise<BlogPostWithImages[]>;
+  getPublishedBlogPosts(): Promise<BlogPostWithImages[]>;
+  getBlogPost(id: number): Promise<BlogPostWithImages | null>;
+  getBlogPostBySlug(slug: string): Promise<BlogPostWithImages | null>;
+  createBlogPost(post: InsertBlogPost): Promise<SelectBlogPost>;
+  updateBlogPost(id: number, post: Partial<InsertBlogPost>): Promise<SelectBlogPost | null>;
+  deleteBlogPost(id: number): Promise<boolean>;
+  publishBlogPost(id: number): Promise<SelectBlogPost | null>;
+  
+  createBlogImage(image: InsertBlogImage): Promise<SelectBlogImage>;
+  deleteBlogImage(id: number): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -107,6 +137,34 @@ export class DatabaseStorage implements IStorage {
     
     const prices = await db.select().from(schema.productPrices).where(eq(schema.productPrices.productId, id));
     return { ...updated, prices };
+  }
+
+  async updateProductWithPrices(
+    id: number, 
+    product: Partial<InsertProduct>, 
+    prices: Omit<InsertProductPrice, "productId">[]
+  ): Promise<ProductWithPrices | null> {
+    const [updated] = await db.update(schema.products)
+      .set({ ...product, updatedAt: new Date() })
+      .where(eq(schema.products.id, id))
+      .returning();
+    
+    if (!updated) return null;
+    
+    await db.delete(schema.productPrices).where(eq(schema.productPrices.productId, id));
+    
+    const pricesWithProductId = prices.map(p => ({
+      productId: id,
+      value: p.value,
+      label: p.label,
+      price: p.price,
+    }));
+    
+    const newPrices = await db.insert(schema.productPrices)
+      .values(pricesWithProductId)
+      .returning();
+    
+    return { ...updated, prices: newPrices };
   }
 
   async deleteProduct(id: number): Promise<boolean> {
@@ -271,6 +329,170 @@ export class DatabaseStorage implements IStorage {
   async createAdmin(admin: InsertAdmin): Promise<SelectAdmin> {
     const [newAdmin] = await db.insert(schema.admins).values(admin).returning();
     return newAdmin;
+  }
+
+  async getSiteSettings(): Promise<SelectSiteSettings> {
+    const [settings] = await db.select().from(schema.siteSettings);
+    
+    if (!settings) {
+      const [newSettings] = await db.insert(schema.siteSettings)
+        .values({
+          siteTitle: "Slamawy Store",
+          heroTitle: "Welcome to Slamawy Store",
+          heroSubtitle: "Trusted & Fast Delivery",
+          whatsappNumber: "+201000000000",
+          location: "Egypt",
+        })
+        .returning();
+      return newSettings;
+    }
+    
+    return settings;
+  }
+
+  async updateSiteSettings(settings: Partial<InsertSiteSettings>): Promise<SelectSiteSettings> {
+    const currentSettings = await this.getSiteSettings();
+    
+    const [updated] = await db.update(schema.siteSettings)
+      .set({ ...settings, updatedAt: new Date() })
+      .where(eq(schema.siteSettings.id, currentSettings.id))
+      .returning();
+    
+    return updated;
+  }
+
+  async getAllSocialLinks(): Promise<SelectSocialLink[]> {
+    return await db.select()
+      .from(schema.socialLinks)
+      .orderBy(asc(schema.socialLinks.order));
+  }
+
+  async createSocialLink(link: InsertSocialLink): Promise<SelectSocialLink> {
+    const [newLink] = await db.insert(schema.socialLinks).values(link).returning();
+    return newLink;
+  }
+
+  async updateSocialLink(id: number, link: Partial<InsertSocialLink>): Promise<SelectSocialLink | null> {
+    const [updated] = await db.update(schema.socialLinks)
+      .set(link)
+      .where(eq(schema.socialLinks.id, id))
+      .returning();
+    
+    return updated || null;
+  }
+
+  async deleteSocialLink(id: number): Promise<boolean> {
+    await db.delete(schema.socialLinks).where(eq(schema.socialLinks.id, id));
+    return true;
+  }
+
+  async getAllBlogPosts(): Promise<BlogPostWithImages[]> {
+    const posts = await db.select()
+      .from(schema.blogPosts)
+      .orderBy(desc(schema.blogPosts.createdAt));
+    
+    const postsWithImages = await Promise.all(
+      posts.map(async (post) => {
+        const images = await db.select()
+          .from(schema.blogImages)
+          .where(eq(schema.blogImages.postId, post.id));
+        return { ...post, images };
+      })
+    );
+    
+    return postsWithImages;
+  }
+
+  async getPublishedBlogPosts(): Promise<BlogPostWithImages[]> {
+    const posts = await db.select()
+      .from(schema.blogPosts)
+      .where(eq(schema.blogPosts.isPublished, true))
+      .orderBy(desc(schema.blogPosts.publishedAt));
+    
+    const postsWithImages = await Promise.all(
+      posts.map(async (post) => {
+        const images = await db.select()
+          .from(schema.blogImages)
+          .where(eq(schema.blogImages.postId, post.id));
+        return { ...post, images };
+      })
+    );
+    
+    return postsWithImages;
+  }
+
+  async getBlogPost(id: number): Promise<BlogPostWithImages | null> {
+    const [post] = await db.select()
+      .from(schema.blogPosts)
+      .where(eq(schema.blogPosts.id, id));
+    
+    if (!post) return null;
+    
+    const images = await db.select()
+      .from(schema.blogImages)
+      .where(eq(schema.blogImages.postId, id));
+    
+    return { ...post, images };
+  }
+
+  async getBlogPostBySlug(slug: string): Promise<BlogPostWithImages | null> {
+    const [post] = await db.select()
+      .from(schema.blogPosts)
+      .where(eq(schema.blogPosts.slug, slug));
+    
+    if (!post) return null;
+    
+    const images = await db.select()
+      .from(schema.blogImages)
+      .where(eq(schema.blogImages.postId, post.id));
+    
+    return { ...post, images };
+  }
+
+  async createBlogPost(post: InsertBlogPost): Promise<SelectBlogPost> {
+    const postData: any = { ...post };
+    if (post.publishedAt) {
+      postData.publishedAt = new Date(post.publishedAt);
+    }
+    const [newPost] = await db.insert(schema.blogPosts).values(postData).returning();
+    return newPost;
+  }
+
+  async updateBlogPost(id: number, post: Partial<InsertBlogPost>): Promise<SelectBlogPost | null> {
+    const updateData: any = { ...post, updatedAt: new Date() };
+    if (post.publishedAt) {
+      updateData.publishedAt = new Date(post.publishedAt);
+    }
+    const [updated] = await db.update(schema.blogPosts)
+      .set(updateData)
+      .where(eq(schema.blogPosts.id, id))
+      .returning();
+    
+    return updated || null;
+  }
+
+  async deleteBlogPost(id: number): Promise<boolean> {
+    await db.delete(schema.blogPosts).where(eq(schema.blogPosts.id, id));
+    return true;
+  }
+
+  async publishBlogPost(id: number): Promise<SelectBlogPost | null> {
+    const [published] = await db.update(schema.blogPosts)
+      .set({ isPublished: true, publishedAt: new Date() })
+      .where(eq(schema.blogPosts.id, id))
+      .returning();
+    
+    return published || null;
+  }
+
+  async createBlogImage(image: InsertBlogImage): Promise<SelectBlogImage> {
+    const [newImage] = await db.insert(schema.blogImages).values(image).returning();
+    return newImage;
+  }
+
+  async deleteBlogImage(id: number): Promise<boolean> {
+    await db.delete(schema.blogImages).where(eq(schema.blogImages.id, id));
+    return true;
   }
 }
 

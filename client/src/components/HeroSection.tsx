@@ -5,7 +5,8 @@ import { useTheme } from "@/components/ThemeProvider";
 import heroVideo from "@assets/clideo_editor_8a556c51557b41029d2f8dc30a022ca9 (online-video-cutter.com)_1760565168452.mp4";
 import galaxyBg from "@assets/generated_images/Galaxy_stars_space_background_7ba46401.png";
 import lightBg from "@assets/generated_images/Light_mode_hero_background_gradient_363c94b7.png";
-import salamawyLogo from "@assets/generated_images/SLAMAWY_logo.png";
+import darkModeLogo from "@assets/generated_images/Salamawy_Store_dark_mode_logo_c9258881.png";
+import lightModeLogo from "@assets/generated_images/Salamawy_Store_light_mode_logo_ee13abb3.png";
 
 interface HeroSectionProps {
   onShopClick: () => void;
@@ -31,7 +32,7 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
       />
       
       {/* Additional overlay for better visibility */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-transparent dark:from-blue-900/10 dark:via-purple-900/10 dark:to-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-100/80 via-blue-100/60 to-purple-100/50 dark:from-blue-900/10 dark:via-purple-900/10 dark:to-black/60 transition-all duration-500" />
 
       <div className="hidden md:flex absolute inset-0 z-0 items-center justify-end">
         <video 
@@ -49,9 +50,9 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
       <div className="absolute top-0 left-0 right-0 z-20 p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <img 
-            src={salamawyLogo} 
+            src={theme === 'dark' ? lightModeLogo : darkModeLogo} 
             alt="Slamawy Logo" 
-            className={`w-20 h-20 object-contain transition-all ${theme === 'dark' ? 'brightness-110 contrast-110' : 'brightness-90'}`}
+            className="w-20 h-20 object-contain transition-all duration-500"
           />
           <h2 className="text-gray-800 dark:text-foreground font-bold text-lg">SLAMAWY STORE</h2>
         </div>

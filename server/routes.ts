@@ -10,8 +10,13 @@ import {
   insertSocialMediaServiceSchema,
   insertSocialMediaPriceSchema,
   insertAdminSchema,
+  insertSiteSettingsSchema,
+  insertSocialLinkSchema,
+  insertBlogPostSchema,
+  insertBlogImageSchema,
 } from "@shared/schema";
 import { z } from "zod";
+import { fromError } from "zod-validation-error";
 
 declare module "express-session" {
   interface SessionData {
@@ -135,12 +140,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/products/:id", isAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const validatedProduct = insertProductSchema.partial().parse(req.body);
-      const updated = await storage.updateProduct(id, validatedProduct);
-      if (!updated) {
-        return res.status(404).json({ error: "Product not found" });
+      const { product, prices } = req.body;
+      
+      if (prices && Array.isArray(prices)) {
+        const validatedProduct = insertProductSchema.partial().parse(product);
+        const validatedPrices = z.array(z.object({
+          value: z.number(),
+          label: z.string(),
+          price: z.string(),
+        })).parse(prices);
+        
+        const updated = await storage.updateProductWithPrices(id, validatedProduct, validatedPrices);
+        if (!updated) {
+          return res.status(404).json({ error: "Product not found" });
+        }
+        res.json(updated);
+      } else {
+        const validatedProduct = insertProductSchema.partial().parse(req.body);
+        const updated = await storage.updateProduct(id, validatedProduct);
+        if (!updated) {
+          return res.status(404).json({ error: "Product not found" });
+        }
+        res.json(updated);
       }
-      res.json(updated);
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ error: "Validation error", details: error.errors });
@@ -329,6 +351,220 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ error: "Failed to delete service" });
+    }
+  });
+
+  // Site Settings Routes
+  app.get("/api/admin/site-settings", isAdmin, async (_req, res) => {
+    try {
+      const settings = await storage.getSiteSettings();
+      res.json(settings);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch site settings" });
+    }
+  });
+
+  app.put("/api/admin/site-settings", isAdmin, async (req, res) => {
+    try {
+      const validatedSettings = insertSiteSettingsSchema.parse(req.body);
+      const updated = await storage.updateSiteSettings(validatedSettings);
+      res.json(updated);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const validationError = fromError(error);
+        return res.status(400).json({ error: validationError.message });
+      }
+      res.status(500).json({ error: "Failed to update site settings" });
+    }
+  });
+
+  // Social Links Routes
+  app.get("/api/social-links", async (_req, res) => {
+    try {
+      const links = await storage.getAllSocialLinks();
+      const activeLinks = links.filter(link => link.isActive);
+      res.json(activeLinks);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch social links" });
+    }
+  });
+
+  app.get("/api/admin/social-links", isAdmin, async (_req, res) => {
+    try {
+      const links = await storage.getAllSocialLinks();
+      res.json(links);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch social links" });
+    }
+  });
+
+  app.post("/api/admin/social-links", isAdmin, async (req, res) => {
+    try {
+      const validatedLink = insertSocialLinkSchema.parse(req.body);
+      const newLink = await storage.createSocialLink(validatedLink);
+      res.status(201).json(newLink);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const validationError = fromError(error);
+        return res.status(400).json({ error: validationError.message });
+      }
+      res.status(500).json({ error: "Failed to create social link" });
+    }
+  });
+
+  app.put("/api/admin/social-links/:id", isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const validatedLink = insertSocialLinkSchema.partial().parse(req.body);
+      const updated = await storage.updateSocialLink(id, validatedLink);
+      if (!updated) {
+        return res.status(404).json({ error: "Social link not found" });
+      }
+      res.json(updated);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const validationError = fromError(error);
+        return res.status(400).json({ error: validationError.message });
+      }
+      res.status(500).json({ error: "Failed to update social link" });
+    }
+  });
+
+  app.delete("/api/admin/social-links/:id", isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteSocialLink(id);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete social link" });
+    }
+  });
+
+  // Blog Posts Routes
+  app.get("/api/blog-posts", async (_req, res) => {
+    try {
+      const posts = await storage.getPublishedBlogPosts();
+      res.json(posts);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch blog posts" });
+    }
+  });
+
+  app.get("/api/blog-posts/:slug", async (req, res) => {
+    try {
+      const slug = req.params.slug;
+      const post = await storage.getBlogPostBySlug(slug);
+      if (!post) {
+        return res.status(404).json({ error: "Blog post not found" });
+      }
+      if (!post.isPublished) {
+        return res.status(404).json({ error: "Blog post not found" });
+      }
+      res.json(post);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch blog post" });
+    }
+  });
+
+  app.get("/api/admin/blog-posts", isAdmin, async (_req, res) => {
+    try {
+      const posts = await storage.getAllBlogPosts();
+      res.json(posts);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch blog posts" });
+    }
+  });
+
+  app.get("/api/admin/blog-posts/:id", isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const post = await storage.getBlogPost(id);
+      if (!post) {
+        return res.status(404).json({ error: "Blog post not found" });
+      }
+      res.json(post);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch blog post" });
+    }
+  });
+
+  app.post("/api/admin/blog-posts", isAdmin, async (req, res) => {
+    try {
+      const validatedPost = insertBlogPostSchema.parse(req.body);
+      const newPost = await storage.createBlogPost(validatedPost);
+      res.status(201).json(newPost);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const validationError = fromError(error);
+        return res.status(400).json({ error: validationError.message });
+      }
+      res.status(500).json({ error: "Failed to create blog post" });
+    }
+  });
+
+  app.put("/api/admin/blog-posts/:id", isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const validatedPost = insertBlogPostSchema.partial().parse(req.body);
+      const updated = await storage.updateBlogPost(id, validatedPost);
+      if (!updated) {
+        return res.status(404).json({ error: "Blog post not found" });
+      }
+      res.json(updated);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const validationError = fromError(error);
+        return res.status(400).json({ error: validationError.message });
+      }
+      res.status(500).json({ error: "Failed to update blog post" });
+    }
+  });
+
+  app.delete("/api/admin/blog-posts/:id", isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteBlogPost(id);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete blog post" });
+    }
+  });
+
+  app.post("/api/admin/blog-posts/:id/publish", isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const published = await storage.publishBlogPost(id);
+      if (!published) {
+        return res.status(404).json({ error: "Blog post not found" });
+      }
+      res.json(published);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to publish blog post" });
+    }
+  });
+
+  // Blog Images Routes
+  app.post("/api/admin/blog-images", isAdmin, async (req, res) => {
+    try {
+      const validatedImage = insertBlogImageSchema.parse(req.body);
+      const newImage = await storage.createBlogImage(validatedImage);
+      res.status(201).json(newImage);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const validationError = fromError(error);
+        return res.status(400).json({ error: validationError.message });
+      }
+      res.status(500).json({ error: "Failed to create blog image" });
+    }
+  });
+
+  app.delete("/api/admin/blog-images/:id", isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteBlogImage(id);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete blog image" });
     }
   });
 
