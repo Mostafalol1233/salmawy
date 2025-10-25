@@ -1,6 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import { eq, desc, asc } from "drizzle-orm";
+import { eq, desc, asc, and } from "drizzle-orm";
 import * as schema from "@shared/schema";
 import type {
   InsertProduct,
@@ -14,6 +14,7 @@ import type {
   InsertSocialLink,
   InsertBlogPost,
   InsertBlogImage,
+  InsertBlogComment,
   SelectProduct,
   SelectProductPrice,
   SelectReview,
@@ -25,6 +26,7 @@ import type {
   SelectSocialLink,
   SelectBlogPost,
   SelectBlogImage,
+  SelectBlogComment,
   ProductWithPrices,
   SocialMediaServiceWithPrices,
   BlogPostWithImages,
@@ -86,6 +88,12 @@ export interface IStorage {
   
   createBlogImage(image: InsertBlogImage): Promise<SelectBlogImage>;
   deleteBlogImage(id: number): Promise<boolean>;
+  
+  getBlogComments(postId: number, approvedOnly?: boolean): Promise<SelectBlogComment[]>;
+  createBlogComment(comment: InsertBlogComment): Promise<SelectBlogComment>;
+  updateBlogComment(id: number, comment: Partial<InsertBlogComment>): Promise<SelectBlogComment | null>;
+  deleteBlogComment(id: number): Promise<boolean>;
+  approveBlogComment(id: number): Promise<SelectBlogComment | null>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -493,6 +501,50 @@ export class DatabaseStorage implements IStorage {
   async deleteBlogImage(id: number): Promise<boolean> {
     await db.delete(schema.blogImages).where(eq(schema.blogImages.id, id));
     return true;
+  }
+
+  async getBlogComments(postId: number, approvedOnly?: boolean): Promise<SelectBlogComment[]> {
+    if (approvedOnly) {
+      return await db.select()
+        .from(schema.blogComments)
+        .where(and(
+          eq(schema.blogComments.postId, postId),
+          eq(schema.blogComments.isApproved, true)
+        ))
+        .orderBy(desc(schema.blogComments.createdAt));
+    }
+    return await db.select()
+      .from(schema.blogComments)
+      .where(eq(schema.blogComments.postId, postId))
+      .orderBy(desc(schema.blogComments.createdAt));
+  }
+
+  async createBlogComment(comment: InsertBlogComment): Promise<SelectBlogComment> {
+    const [newComment] = await db.insert(schema.blogComments).values(comment).returning();
+    return newComment;
+  }
+
+  async updateBlogComment(id: number, comment: Partial<InsertBlogComment>): Promise<SelectBlogComment | null> {
+    const [updated] = await db.update(schema.blogComments)
+      .set(comment)
+      .where(eq(schema.blogComments.id, id))
+      .returning();
+    
+    return updated || null;
+  }
+
+  async deleteBlogComment(id: number): Promise<boolean> {
+    await db.delete(schema.blogComments).where(eq(schema.blogComments.id, id));
+    return true;
+  }
+
+  async approveBlogComment(id: number): Promise<SelectBlogComment | null> {
+    const [approved] = await db.update(schema.blogComments)
+      .set({ isApproved: true })
+      .where(eq(schema.blogComments.id, id))
+      .returning();
+    
+    return approved || null;
   }
 }
 

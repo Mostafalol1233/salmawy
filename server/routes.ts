@@ -14,6 +14,7 @@ import {
   insertSocialLinkSchema,
   insertBlogPostSchema,
   insertBlogImageSchema,
+  insertBlogCommentSchema,
 } from "@shared/schema";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
@@ -574,6 +575,95 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ error: "Failed to delete blog image" });
+    }
+  });
+
+  // Blog Comments Routes
+  app.get("/api/blog-posts/:slug/comments", async (req, res) => {
+    try {
+      const slug = req.params.slug;
+      const post = await storage.getBlogPostBySlug(slug);
+      if (!post) {
+        return res.status(404).json({ error: "Blog post not found" });
+      }
+      const comments = await storage.getBlogComments(post.id, true);
+      res.json(comments);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch comments" });
+    }
+  });
+
+  app.post("/api/blog-posts/:slug/comments", async (req, res) => {
+    try {
+      const slug = req.params.slug;
+      const post = await storage.getBlogPostBySlug(slug);
+      if (!post) {
+        return res.status(404).json({ error: "Blog post not found" });
+      }
+      const validatedComment = insertBlogCommentSchema.parse({
+        ...req.body,
+        postId: post.id,
+        isApproved: false,
+      });
+      const newComment = await storage.createBlogComment(validatedComment);
+      res.status(201).json(newComment);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const validationError = fromError(error);
+        return res.status(400).json({ error: validationError.message });
+      }
+      res.status(500).json({ error: "Failed to create comment" });
+    }
+  });
+
+  app.get("/api/admin/blog-comments/:postId", isAdmin, async (req, res) => {
+    try {
+      const postId = parseInt(req.params.postId);
+      const comments = await storage.getBlogComments(postId);
+      res.json(comments);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch comments" });
+    }
+  });
+
+  app.put("/api/admin/blog-comments/:id", isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const validatedComment = insertBlogCommentSchema.partial().parse(req.body);
+      const updated = await storage.updateBlogComment(id, validatedComment);
+      if (!updated) {
+        return res.status(404).json({ error: "Comment not found" });
+      }
+      res.json(updated);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const validationError = fromError(error);
+        return res.status(400).json({ error: validationError.message });
+      }
+      res.status(500).json({ error: "Failed to update comment" });
+    }
+  });
+
+  app.post("/api/admin/blog-comments/:id/approve", isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const approved = await storage.approveBlogComment(id);
+      if (!approved) {
+        return res.status(404).json({ error: "Comment not found" });
+      }
+      res.json(approved);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to approve comment" });
+    }
+  });
+
+  app.delete("/api/admin/blog-comments/:id", isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteBlogComment(id);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete comment" });
     }
   });
 

@@ -115,6 +115,16 @@ export const blogImages = pgTable("blog_images", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+export const blogComments = pgTable("blog_comments", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  postId: integer("post_id").notNull().references(() => blogPosts.id, { onDelete: "cascade" }),
+  author: text("author").notNull(),
+  email: text("email"),
+  content: text("content").notNull(),
+  isApproved: boolean("is_approved").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const insertProductSchema = z.object({
   name: z.string(),
   currency: z.string(),
@@ -202,6 +212,14 @@ export const insertBlogImageSchema = z.object({
   caption: z.string().optional(),
 });
 
+export const insertBlogCommentSchema = z.object({
+  postId: z.number(),
+  author: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email").optional().or(z.literal("")),
+  content: z.string().min(1, "Comment is required"),
+  isApproved: z.boolean().default(false),
+});
+
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type InsertProductPrice = z.infer<typeof insertProductPriceSchema>;
 export type InsertReview = z.infer<typeof insertReviewSchema>;
@@ -213,6 +231,7 @@ export type InsertSiteSettings = z.infer<typeof insertSiteSettingsSchema>;
 export type InsertSocialLink = z.infer<typeof insertSocialLinkSchema>;
 export type InsertBlogPost = z.infer<typeof insertBlogPostSchema>;
 export type InsertBlogImage = z.infer<typeof insertBlogImageSchema>;
+export type InsertBlogComment = z.infer<typeof insertBlogCommentSchema>;
 
 export type SelectProduct = typeof products.$inferSelect;
 export type SelectProductPrice = typeof productPrices.$inferSelect;
@@ -225,6 +244,7 @@ export type SelectSiteSettings = typeof siteSettings.$inferSelect;
 export type SelectSocialLink = typeof socialLinks.$inferSelect;
 export type SelectBlogPost = typeof blogPosts.$inferSelect;
 export type SelectBlogImage = typeof blogImages.$inferSelect;
+export type SelectBlogComment = typeof blogComments.$inferSelect;
 
 export interface ProductWithPrices extends SelectProduct {
   prices: SelectProductPrice[];

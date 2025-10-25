@@ -1,21 +1,79 @@
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link, useParams } from "wouter";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Calendar, Home } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { ArrowLeft, Calendar, Home, MessageCircle, User } from "lucide-react";
 import { format } from "date-fns";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useToast } from "@/hooks/use-toast";
+import { queryClient, apiRequest } from "@/lib/queryClient";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
-import type { SelectBlogPost } from "@shared/schema";
+import type { SelectBlogPost, SelectBlogComment } from "@shared/schema";
+
+const commentFormSchema = z.object({
+  author: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email").optional().or(z.literal("")),
+  content: z.string().min(1, "Comment is required"),
+});
+
+type CommentForm = z.infer<typeof commentFormSchema>;
 
 export default function BlogPost() {
   const params = useParams();
   const slug = params.slug;
+  const { toast } = useToast();
 
   const { data: post, isLoading, error } = useQuery<SelectBlogPost>({
     queryKey: [`/api/blog-posts/${slug}`],
   });
+
+  const { data: comments, isLoading: commentsLoading } = useQuery<SelectBlogComment[]>({
+    queryKey: [`/api/blog-posts/${slug}/comments`],
+    enabled: !!post,
+  });
+
+  const form = useForm<CommentForm>({
+    resolver: zodResolver(commentFormSchema),
+    defaultValues: {
+      author: "",
+      email: "",
+      content: "",
+    },
+  });
+
+  const submitCommentMutation = useMutation({
+    mutationFn: async (data: CommentForm) => {
+      await apiRequest("POST", `/api/blog-posts/${slug}/comments`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/blog-posts/${slug}/comments`] });
+      toast({
+        title: "Comment submitted successfully!",
+        description: "Your comment will be published after approval.",
+      });
+      form.reset();
+    },
+    onError: (error: Error) => {
+      toast({
+        variant: "destructive",
+        title: "Failed to submit comment",
+        description: error.message,
+      });
+    },
+  });
+
+  const onSubmitComment = (data: CommentForm) => {
+    submitCommentMutation.mutate(data);
+  };
 
   if (isLoading) {
     return (
@@ -120,6 +178,126 @@ export default function BlogPost() {
             {post.content}
           </ReactMarkdown>
         </div>
+
+        <section className="mt-12 pt-8 border-t border-border">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
+              <MessageCircle className="w-6 h-6" />
+              Comments ({comments?.length || 0})
+            </h2>
+            
+            {commentsLoading ? (
+              <div className="space-y-4">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="h-24 bg-card rounded-md animate-pulse" />
+                ))}
+              </div>
+            ) : comments && comments.length > 0 ? (
+              <div className="space-y-6">
+                {comments.map((comment) => (
+                  <Card key={comment.id} data-testid={`comment-${comment.id}`}>
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center gap-2 text-sm">
+                        <User className="w-4 h-4 text-muted-foreground" />
+                        <span className="font-semibold text-foreground" data-testid={`comment-author-${comment.id}`}>
+                          {comment.author}
+                        </span>
+                        <span className="text-muted-foreground">•</span>
+                        <span className="text-muted-foreground" data-testid={`comment-date-${comment.id}`}>
+                          {format(new Date(comment.createdAt), "MMM dd, yyyy")}
+                        </span>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-foreground whitespace-pre-wrap" data-testid={`comment-content-${comment.id}`}>
+                        {comment.content}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-foreground text-center py-8" data-testid="text-no-comments">
+                No comments yet. Be the first to comment!
+              </p>
+            )}
+          </div>
+
+          <Card className="mt-8">
+            <CardHeader>
+              <CardTitle className="text-xl">Leave a Comment</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmitComment)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="author"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="Your name"
+                            data-testid="input-comment-author"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email (Optional)</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="email"
+                            placeholder="your@email.com"
+                            data-testid="input-comment-email"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="content"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Comment</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            {...field}
+                            placeholder="Share your thoughts..."
+                            rows={5}
+                            data-testid="input-comment-content"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <Button
+                    type="submit"
+                    disabled={submitCommentMutation.isPending}
+                    data-testid="button-submit-comment"
+                  >
+                    {submitCommentMutation.isPending ? "Submitting..." : "Submit Comment"}
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </section>
 
         <footer className="mt-12 pt-8 border-t border-border">
           <Link href="/blog">

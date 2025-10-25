@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Plus, Edit, Trash2, FileText, Calendar, Bold, Italic, Heading, List, Link as LinkIcon, Eye, Upload, Image as ImageIcon, X } from "lucide-react";
+import { Plus, Edit, Trash2, FileText, Calendar, Bold, Italic, Heading, List, Link as LinkIcon, Eye, Upload, Image as ImageIcon, X, Code, Quote, Minus, ListOrdered, Strikethrough } from "lucide-react";
 import type { SelectBlogPost } from "@shared/schema";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
@@ -66,9 +66,14 @@ function MarkdownEditor({ value, onChange, placeholder }: MarkdownEditorProps) {
   const formatButtons = [
     { icon: Bold, label: "Bold", before: "**", after: "**" },
     { icon: Italic, label: "Italic", before: "*", after: "*" },
+    { icon: Strikethrough, label: "Strikethrough", before: "~~", after: "~~" },
     { icon: Heading, label: "Heading", before: "# ", after: "" },
-    { icon: List, label: "List", before: "- ", after: "" },
+    { icon: List, label: "Unordered List", before: "- ", after: "" },
+    { icon: ListOrdered, label: "Ordered List", before: "1. ", after: "" },
+    { icon: Quote, label: "Quote", before: "> ", after: "" },
+    { icon: Code, label: "Code Block", before: "```\n", after: "\n```" },
     { icon: LinkIcon, label: "Link", before: "[", after: "](url)" },
+    { icon: Minus, label: "Horizontal Rule", before: "\n---\n", after: "" },
   ];
 
   return (
@@ -87,7 +92,7 @@ function MarkdownEditor({ value, onChange, placeholder }: MarkdownEditorProps) {
           </TabsList>
           
           {activeTab === "write" && (
-            <div className="flex gap-1">
+            <div className="flex gap-1 flex-wrap">
               {formatButtons.map(({ icon: Icon, label, before, after }) => (
                 <Button
                   key={label}
@@ -96,7 +101,7 @@ function MarkdownEditor({ value, onChange, placeholder }: MarkdownEditorProps) {
                   size="sm"
                   onClick={() => insertMarkdown(before, after)}
                   title={label}
-                  data-testid={`button-format-${label.toLowerCase()}`}
+                  data-testid={`button-format-${label.toLowerCase().replace(/\s+/g, '-')}`}
                   className="h-8 w-8 p-0"
                 >
                   <Icon className="w-4 h-4" />
