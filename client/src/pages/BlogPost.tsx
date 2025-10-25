@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 import type { SelectBlogPost } from "@shared/schema";
 
 export default function BlogPost() {
@@ -115,7 +116,7 @@ export default function BlogPost() {
             prose-li:text-foreground"
           data-testid="content-markdown"
         >
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
             {post.content}
           </ReactMarkdown>
         </div>

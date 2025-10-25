@@ -20,6 +20,7 @@ import type { SelectBlogPost } from "@shared/schema";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 
 const blogPostFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -112,7 +113,7 @@ function MarkdownEditor({ value, onChange, placeholder }: MarkdownEditorProps) {
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder || "Write your content in Markdown..."}
             rows={12}
-            className="font-mono text-sm resize-none"
+            className="font-mono text-sm resize-none whitespace-pre-wrap"
             data-testid="input-post-content"
           />
           <p className="text-xs text-muted-foreground mt-2">
@@ -123,7 +124,7 @@ function MarkdownEditor({ value, onChange, placeholder }: MarkdownEditorProps) {
         <TabsContent value="preview" className="mt-0">
           <Card className="p-4 min-h-[300px] prose prose-sm dark:prose-invert max-w-none">
             {value ? (
-              <ReactMarkdown remarkPlugins={[remarkGfm]} data-testid="markdown-preview">
+              <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]} data-testid="markdown-preview">
                 {value}
               </ReactMarkdown>
             ) : (
