@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Globe } from "lucide-react";
+import { Globe, BookOpen } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useTheme } from "@/components/ThemeProvider";
+import { Link } from "wouter";
 import heroVideo from "@assets/clideo_editor_8a556c51557b41029d2f8dc30a022ca9 (online-video-cutter.com)_1760565168452.mp4";
 import galaxyBg from "@assets/generated_images/Galaxy_stars_space_background_7ba46401.png";
 import lightBg from "@assets/generated_images/Light_mode_hero_background_gradient_363c94b7.png";
@@ -57,6 +58,18 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
           <h2 className="text-gray-800 dark:text-foreground font-bold text-lg">SLAMAWY STORE</h2>
         </div>
 
+        <nav className="hidden md:flex items-center gap-1">
+          <Link href="/blog">
+            <a 
+              className="flex items-center gap-2 px-4 py-2 rounded-md text-gray-800 dark:text-foreground hover:bg-gray-200 dark:hover:bg-accent transition-colors font-medium text-sm"
+              data-testid="link-blog"
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>{isArabic ? "المدونة" : "Blog"}</span>
+            </a>
+          </Link>
+        </nav>
+
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <Button
@@ -67,7 +80,8 @@ export function HeroSection({ onShopClick, onLanguageToggle, isArabic }: HeroSec
             data-testid="button-language-toggle"
           >
             <Globe className="w-4 h-4" />
-            <span>{isArabic ? "Translate to English" : "Translate to Arabic"}</span>
+            <span className="hidden lg:inline">{isArabic ? "Translate to English" : "Translate to Arabic"}</span>
+            <span className="lg:hidden">{isArabic ? "EN" : "AR"}</span>
           </Button>
         </div>
       </div>
