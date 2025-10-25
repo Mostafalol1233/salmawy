@@ -237,3 +237,13 @@ export interface SocialMediaServiceWithPrices extends SelectSocialMediaService {
 export interface BlogPostWithImages extends SelectBlogPost {
   images: SelectBlogImage[];
 }
+
+export interface GameProduct {
+  id: string | number;
+  name: string;
+  currency: string;
+  image: string;
+  category?: string;
+  amounts?: { value: number; label: string; price?: string }[];
+  prices?: SelectProductPrice[];
+}

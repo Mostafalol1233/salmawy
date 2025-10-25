@@ -355,6 +355,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Site Settings Routes
+  app.get("/api/site-settings", async (_req, res) => {
+    try {
+      const settings = await storage.getSiteSettings();
+      res.json(settings);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch site settings" });
+    }
+  });
+
   app.get("/api/admin/site-settings", isAdmin, async (_req, res) => {
     try {
       const settings = await storage.getSiteSettings();

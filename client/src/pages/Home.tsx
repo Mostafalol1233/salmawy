@@ -21,7 +21,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Star, AlertCircle, CheckCircle, Info, X } from "lucide-react";
-import type { ProductWithPrices, SelectReview, SelectAnnouncement } from "@shared/schema";
+import type { ProductWithPrices, SelectReview, SelectAnnouncement, SelectSiteSettings } from "@shared/schema";
 
 interface GameProduct {
   id: string;
@@ -188,8 +188,13 @@ export default function Home() {
   const [isArabic, setIsArabic] = useState(false);
   const [selectedRating, setSelectedRating] = useState(5);
   const productsRef = useRef<HTMLElement>(null);
-  const whatsappNumber = "2001027308353";
   const { toast } = useToast();
+
+  const { data: siteSettings } = useQuery<SelectSiteSettings>({
+    queryKey: ["/api/site-settings"],
+  });
+
+  const whatsappNumber = siteSettings?.whatsappNumber || "2001027308353";
 
   const { data: productsData, isLoading: productsLoading } = useQuery<GameProduct[]>({
     queryKey: ["/api/products"],

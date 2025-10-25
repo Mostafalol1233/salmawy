@@ -12,7 +12,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, isArabic, whatsappNumber = "2001027308353" }: ProductCardProps) {
-  const [selectedAmount, setSelectedAmount] = useState(product.amounts[0]);
+  const productPrices = product.prices || product.amounts || [];
+  const [selectedAmount, setSelectedAmount] = useState(productPrices[0]);
 
   const handleWhatsAppClick = () => {
     const message = isArabic
@@ -43,7 +44,7 @@ export function ProductCard({ product, isArabic, whatsappNumber = "2001027308353
             {isArabic ? "اختر الكمية:" : "Select Amount:"}
           </p>
           <div className="flex flex-wrap gap-2">
-            {product.amounts.map((amount) => (
+            {productPrices.map((amount) => (
               <Badge
                 key={amount.value}
                 variant={selectedAmount.value === amount.value ? "default" : "secondary"}
