@@ -363,7 +363,12 @@ export default function Home() {
               </TabsList>
 
               <TabsContent value="all" className="space-y-12">
-                {Object.entries(groupedProducts).map(([category, categoryProducts]) => {
+                {Object.entries(groupedProducts)
+                  .sort(([a], [b]) => {
+                    const order = ['games', 'subscriptions', 'social_media'];
+                    return order.indexOf(a) - order.indexOf(b);
+                  })
+                  .map(([category, categoryProducts]) => {
                   if (categoryProducts.length === 0) return null;
                   
                   const info = categoryInfo[category as keyof typeof categoryInfo] || {
