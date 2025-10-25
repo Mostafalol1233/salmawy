@@ -6,6 +6,12 @@ Slamawy Store is an Egyptian-based gaming cards e-commerce platform specializing
 
 ## Recent Changes (October 25, 2025)
 
+### Latest Updates
+- **Blog Comments System**: Implemented complete commenting functionality for blog posts with admin moderation, database schema (blogComments table), storage methods, API routes, and UI components with loading states
+- **Enhanced Blog Editor**: Added advanced formatting options including code blocks (inline and block), blockquotes, horizontal rules, strikethrough, ordered/unordered lists for rich content creation
+- **Sample Products**: Created 6 new sample products - 3 subscription services (Discord Nitro, ChatGPT Plus, Spotify Premium) and 3 social media services (Instagram Followers, TikTok Likes, YouTube Views) with multiple pricing tiers
+
+### Previous Updates
 - **Blog Functionality**: Added public-facing blog pages at `/blog` (listing) and `/blog/:slug` (individual posts) with markdown support and theme-aware design
 - **Product Category Filtering**: Implemented tab-based filtering on the home page allowing users to browse products by category (All, Gaming, Subscriptions, Social Media)
 - **Theme-Aware Branding**: Updated all logo displays (HeroSection and AboutSection) to automatically switch between light and dark mode versions
